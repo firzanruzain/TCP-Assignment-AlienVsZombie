@@ -33,17 +33,17 @@ List all the features not yet done. Remove this section if there is no incomplet
 
 ### Muhammad Firzan Ruzain Bin Firdus
 
-1. 1&4
-2. 
+1. Randomly-generate gameboard
+2. Zombie movement and attacks
 
 ### Zharfan Mirza Hafiy Ma Bin Suhaidi
 
-1. 3&6
-2. 
+1. Player attacks
+2. Game controls -player movements
 
 ### Farris Aiman Bin Mohd Harris
 
-1. 2&5
-2. 
+1. Character attributes
+2. game objects -health, pod, trail, space
 
 ## Problems Encountered & Solutions
