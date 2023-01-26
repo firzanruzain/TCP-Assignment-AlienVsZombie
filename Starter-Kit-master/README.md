@@ -31,7 +31,7 @@ Please DO NOT change the Progress Log below. Leave it as it is.
 
 Please replace the following with your group members' names. 
 
-- Tony Stark
+- Muhammad Firzan Ruzain bin Firdus
 - Steve Rogers
 - Dr. Strange
 
