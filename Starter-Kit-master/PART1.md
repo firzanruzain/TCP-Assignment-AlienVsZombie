@@ -31,17 +31,17 @@ List down the contribution of each group members.
 
 For example:
 
-### Tony Stark
+### Muhammad Firzan Ruzain Bin Firdus
 
 1. Randomly generate game board.
 2. *add more*
 
-### Steve Rogers
+### Zharfan Mirza Hafiy Ma Bin Suhaidi
 
 1. Zombie movement and attack behaviour.
 2. *add more*
 
-### Dr. Strange
+### Farris Aiman Bin Mohd Harris
 
 1. Implement all game objects.
 2. *add more*

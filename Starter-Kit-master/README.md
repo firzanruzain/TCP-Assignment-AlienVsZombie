@@ -33,6 +33,6 @@ Please replace the following with your group members' names.
 
 - Muhammad Firzan Ruzain bin Firdus
 - Zharfan Mirza Hafiy Ma Bin Suhaidi
-- Dr. Strange
+- Farris Aiman Bin Mohd Harris
 
 
