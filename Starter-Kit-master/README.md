@@ -32,7 +32,7 @@ Please DO NOT change the Progress Log below. Leave it as it is.
 Please replace the following with your group members' names. 
 
 - Muhammad Firzan Ruzain bin Firdus
-- Steve Rogers
+- Zharfan Mirza Hafiy Ma Bin Suhaidi
 - Dr. Strange
 
 
