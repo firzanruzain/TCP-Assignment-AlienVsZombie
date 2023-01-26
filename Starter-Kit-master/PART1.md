@@ -2,7 +2,7 @@
 
 ## Video Demo
 
-Please provide the YouTube link to your [Video Demo](https://youtube.com).
+[Video Demo](https://youtube.com).
 
 ## Minimum Requirements
 
@@ -10,42 +10,40 @@ Please provide the YouTube link to your [Video Demo](https://youtube.com).
 
 List all the features completed.
 
-1. Cool Feature #1
-2. Cool Feature #2
-3. *add more*
+1. Randomly-generated gameboard -e
+2. Character attributes -h
+3. Player attacks -e
+4. Zombie movement and attacks -h
+5. game objects -health, pod, trail, space -e
+6. Game controls -player movements -h
+
 
 ### To Do
 
 List all the features not yet done. Remove this section if there is no incomplete requirements.
 
-1. Cool Feature #1
-2. *add more*
+1. game objects (rock)
+2. game controls -arrow, save, load, quit, help
 
 ## Additional Features
 
-Describe the additional features that has been implemented.
+1. 
 
 ## Contributions
 
-List down the contribution of each group members.
-
-For example:
-
 ### Muhammad Firzan Ruzain Bin Firdus
 
-1. Randomly generate game board.
-2. *add more*
+1. 1&4
+2. 
 
 ### Zharfan Mirza Hafiy Ma Bin Suhaidi
 
-1. Zombie movement and attack behaviour.
-2. *add more*
+1. 3&6
+2. 
 
 ### Farris Aiman Bin Mohd Harris
 
-1. Implement all game objects.
-2. *add more*
+1. 2&5
+2. 
 
 ## Problems Encountered & Solutions
-
-Describe the problems encountered and provide the solutions / plan for the solutions.
