@@ -5,7 +5,7 @@
 // Names: Muhammad Firzan Ruzain Bin Firdus | Zharfan Mirza Hafiy Ma Bin Suhaidi | Farris Aiman Bin Mohd Harris 
 // IDs: 1211103220 | 1211101006 | 1211102060 
 // Emails: 1211103220@student.mmu.edu.my | 1211101006@student.mmu.edu.my | 1211102060@student.mmu.edu.my 
-// Phones: MEMBER_PHONE_1 | MEMBER_PHONE_2 | MEMBER_PHONE_3 
+// Phones: 01127282086 | 0136311409 | 0196639322 
 // ********************************************************* 
 
 // TODO: Fill in the missing information above and delete this line.
