@@ -8,8 +8,6 @@
 // Phones: 01127282086 | 0136311409 | 0196639322 
 // ********************************************************* 
 
-// TODO: Fill in the missing information above and delete this line.
-
 #include "pf/helper.h"
 #include <iostream>
 using namespace std;
