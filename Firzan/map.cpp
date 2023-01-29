@@ -25,15 +25,18 @@ void CreateGameBoard()
 
 int main()
 {
-    char option;
+    
     ClearScreen();
     cout << "Default Game Settings" << endl;
     cout << "-----------------------" << endl;
     cout << "Board Rows    : 5" << endl;
-    cout << "Board Columns : 5" << endl;
+    cout << "Board Columns : 9" << endl;
     cout << "Zombie Count  : 1" << endl;
 
     cout << "Do you wish to change game settings? (y/n)? => ";
+    char option;
     cin >> option;
-    cout << option;
+
+
+    
 }
