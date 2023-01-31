@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+using namespace std;
 
 class Player
 {
@@ -21,10 +22,10 @@ int main()
     Player player;
     while (true)
     {
-        std::cout << "Player position: " << player.getL() << "," << player.getM() << std::endl;
-        std::cout << "Enter a move (W for up, S for down, A for left, D for right): ";
-        std::string move;
-        std::cin >> move;
+        cout << "Player position: " << player.getL() << "," << player.getM() << std::endl;
+        cout << "Enter a move (W for up, S for down, A for left, D for right): ";
+        string move;
+        cin >> move;
         if (move == "W")
         {
             player.moveUp();
