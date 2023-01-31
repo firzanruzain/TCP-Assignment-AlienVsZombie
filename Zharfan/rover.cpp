@@ -14,6 +14,10 @@ public:
     Mars(int dimX = 15, int dimY = 5);
     void init(int dimX, int dimY);
     void display() const;
+
+    s;
+    s;
+
 };
 Mars::Mars(int dimX, int dimY)
 {
