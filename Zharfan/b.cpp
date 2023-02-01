@@ -23,7 +23,7 @@ int main()
     Alien alien;
     while (true)
     {
-        cout << "Alien position: " << alien.getX() << "," <<alien.getY() << std::endl;
+        cout << "Alien position: " << alien.getX() << "," <<alien.getY() << endl;
         cout << "Enter a move (up for up, down for down, left for left, right for right): ";
         string move;
         cin >> move;

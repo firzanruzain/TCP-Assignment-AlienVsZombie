@@ -1,50 +1,51 @@
 #include <iostream>
 #include <string>
+using namespace std;
 
-
-class Player
+class Alien
 {
 private:
-    int l, m;
+    int x_, y_;
+    char heading_;
 
 public:
-    Player(int l = 0, int m = 0) : l(l), m(m) {}
-    int getL() const { return l; }
-    int getM() const { return m; }
-    void moveUp() { m++; }
-    void moveDown() { m--; }
-    void moveLeft() { l--; }
-    void moveRight() { l++; }
+    Alien(int x = 0, int y = 0) : x_(x), y_(y) {}
+    int getX() const { return x_; }
+    int getY() const { return y_; }
+    void moveUp() { y_++; }
+    void moveDown() { y_--; }
+    void moveLeft() { x_--; }
+    void moveRight() { x_++; }
 };
 
 int main()
 {
-    Player player;
+    Alien alien;
     while (true)
     {
-        std::cout << "Player position: " << player.getL() << "," << player.getM() << std::endl;
-        std::cout << "Enter a move (W for up, S for down, A for left, D for right): ";
-        std::string move;
-        std::cin >> move;
-        if (move == "W")
+        cout << "Alien position: " << alien.getX() << "," <<alien.getY() << endl;
+        cout << "Enter a move (up for up, down for down, left for left, right for right): ";
+        string move;
+        cin >> move;
+        if (move == "up")
         {
-            player.moveUp();
+            alien.moveUp();
         }
-        else if (move == "S")
+        else if (move == "down")
         {
-            player.moveDown();
+            alien.moveDown();
         }
-        else if (move == "A")
+        else if (move == "left")
         {
-            player.moveLeft();
+            alien.moveLeft();
         }
-        else if (move == "D")
+        else if (move == "right")
         {
-            player.moveRight();
+            alien.moveRight();
         }
         else
         {
-            std::cout << "Invalid move" << std::endl;
+            cout << "Invalid move" << endl;
         }
     }
     return 0;
