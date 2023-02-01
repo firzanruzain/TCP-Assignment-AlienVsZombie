@@ -28,7 +28,7 @@ void CreateGameBoard()
 class Board{
     private:
       vector<vector<char>> map_; // convention to put trailing underscore
-    int dimX_, dimY_;          // to indicate private data 
+        int dimX_, dimY_;          // to indicate private data 
 
     public:
         Board(int dimX = 15, int dimY = 5){
@@ -60,9 +60,7 @@ class Board{
         void display() const{
             // comment this out during testing
             // system("cls"); // OR system("clear"); for Linux / MacOS
-            cout << " --__--__--__--__--__--__--__--_" << endl;
-            cout << " = Curiosity, Welcome to Mars! =" << endl;
-            cout << " __--__--__--__--__--__--__--__-" << endl;
+            cout << " = Alien VS Zombie =" << endl;
             // for each row
             for (int i = 0; i < dimY_; ++i)
             {
@@ -143,6 +141,81 @@ class Board{
             int y = col -1;
             return ((x>= 0 && x<= dimX_) && (y>= 0 && y<= dimX_));
         };
+};
+
+class Player{
+    private:
+        int x_, y_;
+    public:
+        Player(Board &board){
+            x_ = board.getDimX()/2 + 1;
+            y_ = board.getDimY()/2 + 1; 
+
+            board.setObject(x_, y_, 'A');
+        }
+        int getX(){
+            return x_;
+        }
+        int getY(){
+            return y_;
+        }
+};
+
+class Zombie{
+    private:
+        int x_,y_;
+        char id_;
+    public:
+        void spawn(Board &board){
+            while(1){
+                x_ = rand() % board.getDimX() + 1;
+                y_ = rand() % board.getDimY() + 1;
+                if (board.getObject(x_, y_) == ' '){
+                    break;
+                }
+            }
+            board.setObject(x_, y_, id_);
+        }
+        char getId(){
+            return id_;
+        }
+        void setId(char id){
+            id_ = id;
+        }
+
+        int getX(){
+            return x_;
+        }
+        int getY(){
+            return y_;
+        }
+
+        void move(Board &board){
+            char possibleHeading[] = {'^', '>', '<', 'v'};
+            char heading = possibleHeading[rand() % 4];
+
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'R', 'P', 'H', ' '};
+            int noOfObjects = 10; // number of objects in the objects array
+            int objNo = rand() % noOfObjects;
+            board.setObject(x_, y_, objects[objNo]);
+
+            switch(heading){
+                case '^':
+                    y_ += 1;
+                    cout << "Moving up" << endl;
+                case '>':
+                    x_ += 1;
+                    cout << "Moving right" << endl;
+                case '<':
+                    x_ -= 1;
+                    cout << "Moving left" << endl;
+                case 'v':
+                    y_ = 1;
+                    cout << "Moving down" << endl;
+            }
+
+            board.setObject(x_, y_, id_);
+        }
 };
 
 int main()
@@ -231,14 +304,25 @@ int main()
     board.setDimX(cols);
     board.setDimY(rows);
 
-    int x, y;
-    x = board.getDimX()/2 + 1;
-    y = board.getDimY()/2 + 1;
-    
-    cout << board.getDimX() << endl;
-    cout << x << y;
-    
-    board.setObject(x, y, 'A');
+    Player alien(board);
     board.display();
+
+	vector<Zombie> zom;
+    Zombie s;
+
+    for (int i = 0; i<zombies; i++){
+        char id = '0'+i+1;
+        s.setId(id);
+        zom.push_back(s);
+    }
+
+	for (int i = 0; i<zombies; i++){
+        zom[i].spawn(board);
+    }
     
+	board.display();
+
+    zom[0].move(board);
+
+    board.display();
 }
