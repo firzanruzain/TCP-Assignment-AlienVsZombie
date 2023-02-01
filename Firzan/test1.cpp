@@ -60,9 +60,7 @@ class Board{
         void display() const{
             // comment this out during testing
             // system("cls"); // OR system("clear"); for Linux / MacOS
-            cout << " --__--__--__--__--__--__--__--_" << endl;
-            cout << " = Curiosity, Welcome to Mars! =" << endl;
-            cout << " __--__--__--__--__--__--__--__-" << endl;
+            cout << " = Alien VS Zombie =" << endl;
             // for each row
             for (int i = 0; i < dimY_; ++i)
             {
@@ -184,6 +182,40 @@ class Zombie{
         void setId(char id){
             id_ = id;
         }
+
+        int getX(){
+            return x_;
+        }
+        int getY(){
+            return y_;
+        }
+
+        void move(Board &board){
+            char possibleHeading[] = {'^', '>', '<', 'v'};
+            char heading = possibleHeading[rand() % 4];
+
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'R', 'P', 'H', ' '};
+            int noOfObjects = 10; // number of objects in the objects array
+            int objNo = rand() % noOfObjects;
+            board.setObject(x_, y_, objects[objNo]);
+
+            switch(heading){
+                case '^':
+                    y_ += 1;
+                    cout << "Moving up" << endl;
+                case '>':
+                    x_ += 1;
+                    cout << "Moving right" << endl;
+                case '<':
+                    x_ -= 1;
+                    cout << "Moving left" << endl;
+                case 'v':
+                    y_ = 1;
+                    cout << "Moving down" << endl;
+            }
+
+            board.setObject(x_, y_, id_);
+        }
 };
 
 int main()
@@ -288,6 +320,9 @@ int main()
         zom[i].spawn(board);
     }
     
-    
 	board.display();
+
+    zom[0].move(board);
+
+    board.display();
 }
