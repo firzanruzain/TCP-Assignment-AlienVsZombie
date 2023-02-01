@@ -1,45 +1,42 @@
 #include <iostream>
-
+#include <string>
+#include <string>
 using namespace std;
-double myImprovedCos(double x, int noOfTerms)
-{
-    int maxN = 2 * noOfTerms - 2;
-    double sum = 1.0;
-    double term = 1.0;
-    int n = 2;
-    while (n <= maxN)
-    {
-        term = -term * ():
-        sum = sum + term;
-        n = n + 2;
+
+ class Alien
+  {
+  private:
+    int life_, attack_;          // to indicate private data
+
+  public:
+    Alien(int life = 100, int attack = 0){
+        setLife(life);
+        setAttack(attack);
     }
-    return sum;
-}
-void testMyCos(double x, int maxNoOfTerms)
-{
-    cout << "Entering testMyCos() ..." << endl;
-    cout.setf(ios::fixed);
-    for (int n = 1; n <= maxNoOfTerms; ++n)
-    {
-        cout << "Number of terms = ";
-        cout.width(4);
-        cout << n;
-        cout.precision(4);
-        cout << " => cos(" << x << ") = ";
-        cout.precision(20);
-        cout << myImprovedCos(x, n) << endl;
+    void setLife(int life){
+        life_ = life;
     }
-    cout << "testMyCos() completed." << endl
-         << endl;
-}
-int main()
-{
-    double radiian;
-    cout << "Angle in radian => ";
-    cin >> radiian;
-    int maxNoOfTerms;
-    cout << "Max number of terms => ";
-    cin >> maxNoOfTerms;
-    cout << endl;
-    testMyCos(radiian, maxNoOfTerms);
-}
+    void setAttack(int attack){
+        attack_ = attack;
+    }
+    int getLife(){
+        return life_;
+    }
+    int getAttack(){
+        return attack_;
+    }
+
+    void display() const{
+        cout<<"life =" << life_ << endl;
+        cout<<"Attack =" << attack_ << endl;
+    };
+  };
+
+
+
+  int main()
+  {
+    Alien alien(200, 20);
+    alien.display();    
+    return 0;
+  }
