@@ -22,7 +22,7 @@ List all the features completed.
 
 List all the features not yet done. Remove this section if there is no incomplete requirements.
 
-1. game objects (rock)
+1. game objects -health, pod, trail, space
 2. game controls -arrow, save, load, quit, help
 3. Zombie & Player attacks
 
@@ -44,6 +44,5 @@ List all the features not yet done. Remove this section if there is no incomplet
 ### Farris Aiman Bin Mohd Harris
 
 1. Character attributes
-2. game objects -health, pod, trail, space
 
 ## Problems Encountered & Solutions

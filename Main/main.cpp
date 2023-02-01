@@ -156,11 +156,13 @@ class Board{
 class Player{
     private:
         int x_, y_;
+        int life_, attack_;
     public:
-        Player(Board &board){
+        Player(Board &board, int life = 100, int attack = 0){
             x_ = board.getDimX()/2 + 1;
             y_ = board.getDimY()/2 + 1; 
-
+            life_ = life;
+            attack_ = attack;
             board.setObject(x_, y_, 'A');
         }
         int getX(){
@@ -168,6 +170,18 @@ class Player{
         }
         int getY(){
             return y_;
+        }
+        void setLife(int life){
+        life_ = life;
+        }
+        void setAttack(int attack){
+            attack_ = attack;
+        }
+        int getLife(){
+            return life_;
+        }
+        int getAttack(){
+            return attack_;
         }
         void move(char dir, Board &board){
 
@@ -202,9 +216,6 @@ class Player{
 
             board.setObject(x_, y_, 'A');
         }
-        void moveDown() { y_--; }
-        void moveLeft() { x_--; }
-        void moveRight() { x_++; }
 
 
         
@@ -212,9 +223,14 @@ class Player{
 
 class Zombie{
     private:
-        int x_,y_;
+        int x_,y_, life_, attack_, range_ ;
         char id_;
     public:
+        Zombie(int life = 100, int attack = 20, int range = 3){
+            life_ = life;
+            attack_ = attack;
+            range_ = range;
+        }
         void spawn(Board &board){
             while(1){
                 x_ = rand() % board.getDimX() + 1;
@@ -238,6 +254,25 @@ class Zombie{
         int getY(){
             return y_;
         }
+        int getLife(){
+            return life_;
+        }
+        int getAttack(){
+            return attack_;
+        }
+        int getRange(){
+            return range_;
+        }
+        void setLife(int life){
+            life_ = life;
+        }
+        void setAttack(int attack){
+            attack_ = attack;
+        }
+        void setRange(int range){
+            range_ = range;
+        }
+        
 
         void move(Board &board){
             char possibleHeading[] = {'^', '>', '<', 'v'};
@@ -376,8 +411,13 @@ int main()
 
     while(true){
         cout << "Alien's Turn....." << endl;
+        cout << "Alien   : Life " << alien.getLife() << ", Attack " << alien.getAttack() << endl;
+        for (int i = 0; i<zombies; i++){
+        cout << "Zombie 1: Life " << zom[i].getLife() << ", Attack " << zom[i].getAttack() << ", Range " << zom[i].getAttack() << endl << endl;
+        }
+
         char move;
-        cout << "Enter option => ";
+        cout << "Enter command => ";
         cin >> move;
         cout << endl;
         alien.move(move, board);
