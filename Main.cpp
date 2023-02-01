@@ -10,19 +10,19 @@ using namespace std;
 void Pause()
 {
     cout << "Pausing Now" << endl;
-    //pf::Pause();
+    pf::Pause();
     cout << endl;
 }
 void ClearScreen()
 {
-    //pf::ClearScreen();
+    pf::ClearScreen();
     cout << endl;
 }
 void CreateGameBoard()
 {
     cout << "Create Game Board" << endl;
-    //pf::CreateGameBoard();
-    //pf::ShowGameBoard();
+    pf::CreateGameBoard();
+    pf::ShowGameBoard();
 }
 
 class Board{

@@ -24,6 +24,7 @@ List all the features not yet done. Remove this section if there is no incomplet
 
 1. game objects (rock)
 2. game controls -arrow, save, load, quit, help
+3. Zombie & Player attacks
 
 ## Additional Features
 
@@ -34,12 +35,11 @@ List all the features not yet done. Remove this section if there is no incomplet
 ### Muhammad Firzan Ruzain Bin Firdus
 
 1. Randomly-generate gameboard
-2. Zombie movement and attacks
+2. Zombie movement 
 
 ### Zharfan Mirza Hafiy Ma Bin Suhaidi
 
-1. Player attacks
-2. Game controls -player movements
+1s. Game controls -player movements
 
 ### Farris Aiman Bin Mohd Harris
 
