@@ -6,7 +6,6 @@ class Alien
 {
 private:
     int x_, y_;
-    char heading_;
 
 public:
     Alien(int x = 0, int y = 0) : x_(x), y_(y) {}
@@ -24,7 +23,7 @@ int main()
     while (true)
     {
         cout << "Alien position: " << alien.getX() << "," <<alien.getY() << endl;
-        cout << "Command (up for up, down for down, left for left, right for right): ";
+        cout << "Command>: ";
         string move;
         cin >> move;
         if (move == "up")
