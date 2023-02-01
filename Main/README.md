@@ -1,20 +1,12 @@
 # Alien vs. Zombie
 
-Please introduce the game here.
-
 You may add one signature screenshot of your program here or above the title. Check out [this tutorial](https://www.digitalocean.com/community/tutorials/markdown-markdown-images) to learn how to do it.
 
-Please provide the YouTube link to your [Video Demo](https://youtube.com).
+[Video Demo](https://youtube.com).
 
 ## Compilation Instructions
 
-Provide instructions on how to compile your program, especially when it is non-trivial.
-
-For example:
-
-```
-g++ main.cpp folder1\code.cpp folder2\code.cpp ......
-```
+g++ main.cpp -o main.exe
 
 ## User Manual
 
