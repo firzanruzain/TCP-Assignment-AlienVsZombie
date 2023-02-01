@@ -147,7 +147,7 @@ class Board{
 
 int main()
 {
-    
+    srand(time(NULL));
     ClearScreen();
     cout << "Default Game Settings" << endl;
     cout << "-----------------------" << endl;
