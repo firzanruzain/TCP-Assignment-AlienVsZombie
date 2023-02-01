@@ -10,12 +10,10 @@
 
 List all the features completed.
 
-1. Randomly-generated gameboard -e
-2. Character attributes -h
-3. Player attacks -e
-4. Zombie movement and attacks -h
-5. game objects -health, pod, trail, space -e
-6. Game controls -player movements -h
+1. Randomly-generated gameboard 
+2. Zombie movements
+3. Player movements
+4. Character Attributes
 
 
 ### To Do
