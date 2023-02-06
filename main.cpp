@@ -30,8 +30,8 @@ class Board{
         void init(int dimX, int dimY){
             dimX_ = dimX;
             dimY_ = dimY;
-            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'R', 'P', 'H', ' '};
-            int noOfObjects = 10; // number of objects in the objects array
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
+            int noOfObjects = 13; // number of objects in the objects array
             // create dynamic 2D array using vectors
             map_.resize(dimY_); // create empty rows
             for (int i = 0; i < dimY_; ++i)
@@ -52,19 +52,20 @@ class Board{
         void display() const{
             // comment this out during testing
             // system("cls"); // OR system("clear"); for Linux / MacOS
-            cout << " = Alien VS Zombie =" << endl;
+            string title = "= Alien VS Zombie =";
+            cout << setw((dimX_*2) - ((dimX_*2 - title.length())/2)) << title << endl;
             // for each row
             for (int i = 0; i < dimY_; ++i)
             {
                 // display upper border of the row
-                cout << " ";
+                cout << "  ";
                 for (int j = 0; j < dimX_; ++j)
                 {
                     cout << "+-";
                 }
                 cout << "+" << endl;
                 // display row number
-                cout << setw(2) << (dimY_ - i);
+                cout << (dimY_ - i) << " ";
                 // display cell content and border of each column
                 for (int j = 0; j < dimX_; j++)
                 {
@@ -73,14 +74,14 @@ class Board{
                 cout << "|" << endl;
             }
             // display lower border of the last row
-            cout << " ";
+            cout << "  ";
             for (int j = 0; j < dimX_; ++j)
             {
                 cout << "+-";
             }
             cout << "+" << endl;
             // display column number
-            cout << " ";
+            cout << "  ";
             for (int j = 0; j < dimX_; ++j)
             {
                 int digit = (j + 1) / 10;
@@ -91,7 +92,7 @@ class Board{
                     cout << digit;
             }
             cout << endl;
-            cout << " ";
+            cout << "  ";
             for (int j = 0; j < dimX_; ++j)
             {
                 cout << " " << (j + 1) % 10;
@@ -165,14 +166,10 @@ class Player{
         int getAttack(){
             return attack_;
         }
-        void move(char dir, Board &board){
+        void turn(char dir, Board &board){
 
-            char possibleHeading[] = {'^', '>', '<', 'v'};
-            char heading = possibleHeading[rand() % 4];
-            cout << heading << " ";
-
-            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'R', 'P', 'H', ' '};
-            int noOfObjects = 10; // number of objects in the objects array
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
+            int noOfObjects = 13; // number of objects in the objects array
             int objNo = rand() % noOfObjects;
             board.setObject(x_, y_, objects[objNo]);
 
@@ -194,6 +191,9 @@ class Player{
                 y_ -= 1;
                 cout << "Moving down" << endl;
                 break;
+            default:
+                cout << "Command is invalid" << endl;
+                break;
             }
 
             board.setObject(x_, y_, 'A');
@@ -208,10 +208,10 @@ class Zombie{
         int x_,y_, life_, attack_, range_ ;
         char id_;
     public:
-        Zombie(int life = 100, int attack = 20, int range = 3){
-            life_ = life;
-            attack_ = attack;
-            range_ = range;
+        Zombie(){
+            life_ = (rand()%5+1)*50;
+            attack_ = (rand()%6+1)*5;
+            range_ = (rand()%10+1);
         }
         void spawn(Board &board){
             while(1){
@@ -253,6 +253,11 @@ class Zombie{
         }
         void setRange(int range){
             range_ = range;
+        }
+        void randomizeAttributes(){
+            life_ = ((rand()%5)+1)*50;
+            attack_ = ((rand()%6)+1)*5;
+            range_ = (rand()%5)+1;
         }
         
 
@@ -308,15 +313,13 @@ int main()
         cin >> option;
 
         if (option == 'y'){
-
-            change:
             
-            cout << "\n\n";
+            change:
+            pf::ClearScreen();
 
             while(1){
                 cout << "Board Rows    : ";
                 cin >> rows;
-                cout << endl;
                 if (rows % 2 == 0){
                     cout << "Use odd number only!!!\n";
                 }
@@ -328,7 +331,6 @@ int main()
             while(1){
                 cout << "Board Columns : ";
                 cin >> cols;
-                cout << endl;
                 if (cols % 2 == 0){
                     cout << "Use odd number only!!!\n";
                 }
@@ -340,7 +342,6 @@ int main()
             while(1){
                 cout << "Zombie Count  : ";
                 cin >> zombies;
-                cout << endl; 
                 if (cols % 2 == 0){
                     cout << "Use odd number only!!!\n";
                 }
@@ -348,7 +349,7 @@ int main()
                     break;
                 }
             }
-            
+            pf::ClearScreen();
             cout << "Game Settings" << endl;
             cout << "-----------------------" << endl;
             cout << "Board Rows    : " << rows << endl;
@@ -371,43 +372,62 @@ int main()
         }
     }
     pf::ClearScreen();
-    Board board;
-    board.setDimX(cols);
+    Board board; // create board
+    board.setDimX(cols); // set board cols and rows 
     board.setDimY(rows);
 
-    Player alien(board);
+    Player alien(board); // create player
 
-	vector<Zombie> zom;
+	vector<Zombie> zom; // create zombies
     Zombie s;
 
     for (int i = 0; i<zombies; i++){
         char id = '0'+i+1;
         s.setId(id);
+        s.randomizeAttributes();
         zom.push_back(s);
     }
 
+    // spawn zombies
 	for (int i = 0; i<zombies; i++){
         zom[i].spawn(board);
     }
     
-	board.display();
+	board.display(); //board display
+    int turn = 0;
 
     while(true){
-        cout << "Alien's Turn....." << endl;
+        if (turn >= zombies+1){
+            turn = 0;
+        }
+        string arrow = "->  ";
+        string empty = "    ";
+        if (turn == 0){
+            cout << arrow;
+        }else{
+            cout << empty;
+        }
         cout << "Alien   : Life " << alien.getLife() << ", Attack " << alien.getAttack() << endl;
         for (int i = 0; i<zombies; i++){
-        cout << "Zombie 1: Life " << zom[i].getLife() << ", Attack " << zom[i].getAttack() << ", Range " << zom[i].getAttack() << endl << endl;
+            if (turn == i+1){
+                cout << arrow;
+            }else{
+                cout << empty;
+            }
+            cout << "Zombie " << zom[i].getId() << ": Life " << zom[i].getLife() << ", Attack " << zom[i].getAttack() << ", Range " << zom[i].getRange() << endl;
         }
 
+        /*
         char move;
-        cout << "Enter command => ";
+        cout << "\nEnter command => ";
         cin >> move;
         cout << endl;
         alien.move(move, board);
+        turn += 1;
         cout << endl;
         pf::Pause();
         pf::ClearScreen();
         board.display();
-
+        */
     }
 }
