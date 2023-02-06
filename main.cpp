@@ -310,6 +310,7 @@ class Zombie{
 int main()
 {
     srand(time(NULL));
+    pf::ClearScreen();
     cout << "Default Game Settings" << endl;
     cout << "-----------------------" << endl;
     cout << "Board Rows    : 5" << endl;
@@ -387,7 +388,7 @@ int main()
             break;
         }
     }
-    
+    pf::ClearScreen();
     Board board;
     board.setDimX(cols);
     board.setDimY(rows);
@@ -422,7 +423,8 @@ int main()
         cout << endl;
         alien.move(move, board);
         cout << endl;
-
+        pf::Pause();
+        pf::ClearScreen();
         board.display();
 
     }

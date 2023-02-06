@@ -56,7 +56,7 @@ int main()
     cout << "===== Begin Demo =====" << endl;
     
     DemoPause();
-    //DemoClearScreen();
+    DemoClearScreen();
     DemoCreateGameBoard();
 
     cout << "===== End Demo =====" << endl;
