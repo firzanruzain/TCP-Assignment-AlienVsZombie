@@ -148,6 +148,11 @@ class Player{
             attack_ = attack;
             board.setObject(x_, y_, 'A');
         }
+        void reset(Board &board){
+            x_ = board.getDimX()/2 + 1;
+            y_ = board.getDimY()/2 + 1; 
+            board.setObject(x_, y_, 'A');
+        }
         int getX(){
             return x_;
         }
@@ -178,10 +183,6 @@ class Player{
             }
 
             board.setObject(x_, y_, 'A');
-        }
-
-        void display(){
-            cout << "Alien   : Life " << life_ << ", Attack " << attack_ << endl;
         }
 
 
@@ -277,47 +278,10 @@ class Zombie{
             }
             board.setObject(x_, y_, id_);
         }
-        void display(){
-            cout << "Zombie " << id_ << ": Life " << life_ << ", Attack " << attack_ << ", Range " << range_ << endl;
-        }
 };
 
-vector<Zombie> zom; // create zombies
-Zombie s;
-int rows,cols,zombies;
-int turn = 0;
-
-void mainDisp(Board &board, Player &alien){
-    pf::ClearScreen();
-	board.display(); //board display
-    
-
-    //while(true){
-        if (turn >= zombies+1){
-            turn = 0;
-        }
-        string arrow = "->  ";
-        string empty = "    ";
-        if (turn == 0){
-            cout << arrow;
-        }else{
-            cout << empty;
-        }
-        alien.display();
-        for (int i = 0; i<zombies; i++){
-            if (turn == i+1){
-                cout << arrow;
-            }else{
-                cout << empty;
-            }
-            zom[i].display();
-        }
-
-        
-    //}
-}
-
 void command(Player &alien, Board &board){
+    command:
     string command;
     cout << "\nEnter Command => ";
     cin >> command;
@@ -334,14 +298,21 @@ void command(Player &alien, Board &board){
         cout << "8. quit    - Quit the game.\n";
         cout << "9. help    - Display available commands.\n";
         pf::Pause();
-        mainDisp(board, alien);
+        pf::ClearScreen();
+        board.display();
+        goto command;
     }else if (command == "up" || command == "down" || command == "left" || command == "right" ){
         alien.move(command, board);
     }
 }
 
-int main()
-{
+vector<Zombie> zom; // create zombies
+Zombie s;
+Board board; // create board
+Player alien(board); // create player
+int rows,cols,zombies;
+
+void init(){
     srand(time(NULL));
     pf::ClearScreen();
     cout << "Default Game Settings" << endl;
@@ -417,12 +388,11 @@ int main()
             break;
         }
     }
+    pf::ClearScreen();
 
-    Board board; // create board
     board.setDimX(cols); // set board cols and rows 
     board.setDimY(rows);
-    Player alien(board); // create player
-
+    alien.reset(board);
     for (int i = 0; i<zombies; i++){
         char id = '0'+i+1;
         s.setId(id);
@@ -434,19 +404,17 @@ int main()
 	for (int i = 0; i<zombies; i++){
         zom[i].spawn(board);
     }
+}
 
-    while(true){
-        mainDisp(board, alien);
-        command(alien, board);
-    }
-    
-
-    // main display
-    /*pf::ClearScreen();
-	board.display(); //board display
+int main()
+{
+    init();
+	
     int turn = 0;
 
     while(true){
+        pf::ClearScreen();
+        board.display(); //board display
         if (turn >= zombies+1){
             turn = 0;
         }
@@ -457,19 +425,19 @@ int main()
         }else{
             cout << empty;
         }
-        alien.display();
+        cout << "Alien   : Life " << alien.getLife() << ", Attack " << alien.getAttack() << endl;
         for (int i = 0; i<zombies; i++){
             if (turn == i+1){
                 cout << arrow;
             }else{
                 cout << empty;
             }
-            zom[i].display();
+            cout << "Zombie " << zom[i].getId() << ": Life " << zom[i].getLife() << ", Attack " << zom[i].getAttack() << ", Range " << zom[i].getRange() << endl;
         }
 
         command(alien, board);
 
-        
+        /*
         char move;
         cout << "\nEnter command => ";
         cin >> move;
@@ -480,6 +448,6 @@ int main()
         pf::Pause();
         pf::ClearScreen();
         board.display();
-        
-    }*/
+        */
+    }
 }
