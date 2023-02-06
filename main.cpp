@@ -53,7 +53,7 @@ class Board{
             // comment this out during testing
             // system("cls"); // OR system("clear"); for Linux / MacOS
             string title = "= Alien VS Zombie =";
-            cout << setw((dimX_*2) - ((dimX_*2 - title.length())/2)) << title << endl;
+            cout << "  " << setw((dimX_*2) - ((dimX_*2 - title.length())/2)) << title << endl;
             // for each row
             for (int i = 0; i < dimY_; ++i)
             {
@@ -323,7 +323,7 @@ void command(Player &alien, Board &board){
     cin >> command;
     
     if (command == "help"){
-        cout << "\n\nCommands\n";
+        cout << "\nCommands\n";
         cout << "1. up      - Move up.\n";
         cout << "2. down    - Move down.\n";
         cout << "3. left    - Move left.\n";
@@ -332,11 +332,16 @@ void command(Player &alien, Board &board){
         cout << "6. save    - Save the game.\n";
         cout << "7. load    - Load up a game.\n";
         cout << "8. quit    - Quit the game.\n";
-        cout << "9. help    - Display available commands.\n";
+        cout << "9. help    - Display available commands.\n\n";
         pf::Pause();
         mainDisp(board, alien);
     }else if (command == "up" || command == "down" || command == "left" || command == "right" ){
         alien.move(command, board);
+    }else{
+        cout << "\nPlease enter valid commands only\n";
+        cout << "Enter help for a list of available commands\n\n";
+        pf::Pause();
+        pf::ClearScreen();
     }
 }
 
