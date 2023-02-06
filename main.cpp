@@ -141,18 +141,21 @@ class Player{
         int x_, y_;
         int life_, attack_;
     public:
-        Player(Board &board, int life = 100, int attack = 0){
-            x_ = board.getDimX()/2 + 1;
-            y_ = board.getDimY()/2 + 1; 
+        Player(int life = 100, int attack = 0){
             life_ = life;
             attack_ = attack;
-            board.setObject(x_, y_, 'A');
         }
         int getX(){
             return x_;
         }
         int getY(){
             return y_;
+        }
+        void setX(int x){
+            x_ = x;
+        }
+        void setY(int y){
+            y_ = y;
         }
         void setLife(int life){
         life_ = life;
@@ -166,16 +169,61 @@ class Player{
         int getAttack(){
             return attack_;
         }
+        void spawn(Board &board){
+            x_ = board.getDimX()/2 + 1;
+            y_ = board.getDimY()/2 + 1; 
+            board.setObject(x_, y_, 'A');
+        }
         void move(string command, Board &board){
 
             char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
             int noOfObjects = 13; // number of objects in the objects array
             int objNo = rand() % noOfObjects;
             board.setObject(x_, y_, objects[objNo]);
-
+            int move;
             if (command == "up"){
-                cout << y_;
+                move = board.getDimY() - y_;
+            }else if(command == "down"){
+                move = y_ - 1;
+            }else if(command == "right"){
+                move = board.getDimX() - x_;
+            }else if(command == "left"){
+                move = x_ - 1;
             }
+
+            for(int i = 0; i<move; i++){
+                    board.setObject(x_,y_, '.');
+                    if (command == "up"){
+                        y_++;
+                    }else if(command == "down"){
+                        y_--;
+                    }else if(command == "right"){
+                        x_++;
+                    }else if(command == "left"){
+                        x_--;
+                    }
+                    char obj = board.getObject(x_,y_);
+                    switch (obj)
+                    {
+                    case ' ':
+                        cout << "\nAlien finds a empty space.\n\n";
+                        board.setObject(x_,y_, 'A');
+                        pf::Pause();
+                        pf::ClearScreen();
+                        board.display();
+                        break;
+                    
+                    default:
+                        cout << "\nAlien finds a.\n\n";
+                        board.setObject(x_,y_, 'A');
+                        pf::Pause();
+                        pf::ClearScreen();
+                        board.display();
+                        break;
+                    }
+                    
+                }
+
 
             board.setObject(x_, y_, 'A');
         }
@@ -248,33 +296,52 @@ class Zombie{
 
         void move(Board &board){
             char possibleHeading[] = {'^', '>', '<', 'v'};
-            char heading = possibleHeading[rand() % 4];
-            cout << heading << " ";
+            bool invalid = true;
+            char heading;
+            while(invalid){
+                heading = possibleHeading[rand() % 4];
+                if (heading == '^' && y_ < board.getDimY()){
+                    invalid = false;
+                }
+                else if (heading == 'v' && y_ > 1){
+                    invalid = false;
+                }
+                else if (heading == '>' && x_ < board.getDimX()){
+                    invalid = false;
+                }
+                else if (heading == '<' && x_ > 1){
+                    invalid = false;
+                }
+            }
+            
 
-            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'R', 'P', 'H', ' '};
-            int noOfObjects = 10; // number of objects in the objects array
+            cout << "\nZombie " << id_ << " ";
+
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
+            int noOfObjects = 13; // number of objects in the objects array
             int objNo = rand() % noOfObjects;
             board.setObject(x_, y_, objects[objNo]);
 
             switch(heading){
                 case '^':
                     y_ += 1;
-                    cout << "Moving up" << endl;
+                    cout << "moves up." << endl;
                     break;
                 case '>':
                     x_ += 1;
-                    cout << "Moving right" << endl;
+                    cout << "moves right." << endl;
                     break;
                 case '<':
                     x_ -= 1;
-                    cout << "Moving left" << endl;
+                    cout << "moves left." << endl;
                     break;
                 case 'v':
                     y_ -= 1;
-                    cout << "Moving down" << endl;
+                    cout << "moves down." << endl;
                     break;
 
             }
+            pf::Pause();
             board.setObject(x_, y_, id_);
         }
         void display(){
@@ -284,37 +351,34 @@ class Zombie{
 
 vector<Zombie> zom; // create zombies
 Zombie s;
+Board board; // create board
+Player alien; // create player
 int rows,cols,zombies;
 int turn = 0;
 
 void mainDisp(Board &board, Player &alien){
     pf::ClearScreen();
 	board.display(); //board display
-    
 
-    //while(true){
-        if (turn >= zombies+1){
-            turn = 0;
-        }
-        string arrow = "->  ";
-        string empty = "    ";
-        if (turn == 0){
+    if (turn >= zombies+1){
+        turn = 0;
+    }
+    string arrow = "->  ";
+    string empty = "    ";
+    if (turn == 0){
+        cout << arrow;
+    }else{
+        cout << empty;
+    }
+    alien.display();
+    for (int i = 0; i<zombies; i++){
+        if (turn == i+1){
             cout << arrow;
         }else{
             cout << empty;
         }
-        alien.display();
-        for (int i = 0; i<zombies; i++){
-            if (turn == i+1){
-                cout << arrow;
-            }else{
-                cout << empty;
-            }
-            zom[i].display();
+        zom[i].display();
         }
-
-        
-    //}
 }
 
 void command(Player &alien, Board &board){
@@ -336,13 +400,64 @@ void command(Player &alien, Board &board){
         pf::Pause();
         mainDisp(board, alien);
     }else if (command == "up" || command == "down" || command == "left" || command == "right" ){
-        alien.move(command, board);
+        //alien.move(command, board);
+        int y_ = alien.getY();
+        int x_ = alien.getX();
+        int move;
+        if (command == "up"){
+            move = board.getDimY() - y_;
+        }else if(command == "down"){
+            move = y_ - 1;
+        }else if(command == "right"){
+            move = board.getDimX() - x_;
+        }else if(command == "left"){
+            move = x_ - 1;
+        }
+        string direction = command;
+        for(int i = 0; i<move; i++){
+                board.setObject(x_,y_, '.');
+                if (direction == "up"){
+                    y_++;
+                    if (alien.getY() == board.getDimY()){
+                        break;
+                    }
+                }else if(direction == "down"){
+                    y_--;
+                }else if(direction == "right"){
+                    x_++;
+                }else if(direction == "left"){
+                    x_--;
+                }
+                char obj = board.getObject(x_,y_);
+
+                if (obj == ' '){
+                    cout << "\nAlien finds a empty space.\n\n";
+                    board.setObject(x_,y_, 'A');
+                    alien.setX(x_);
+                    alien.setY(y_);
+                    pf::Pause();
+                    pf::ClearScreen();
+                    mainDisp(board, alien);
+                }
+
+                
+            }
     }else{
         cout << "\nPlease enter valid commands only\n";
         cout << "Enter help for a list of available commands\n\n";
         pf::Pause();
         pf::ClearScreen();
     }
+}
+
+void zombieTurn(){
+    for (int i=0; i<zombies; i++){
+        turn++;
+        pf::ClearScreen();
+        mainDisp(board, alien);
+        zom[i].move(board);
+    }
+    turn++;
 }
 
 int main()
@@ -423,10 +538,10 @@ int main()
         }
     }
 
-    Board board; // create board
+    
     board.setDimX(cols); // set board cols and rows 
     board.setDimY(rows);
-    Player alien(board); // create player
+    alien.spawn(board);
 
     for (int i = 0; i<zombies; i++){
         char id = '0'+i+1;
@@ -443,6 +558,7 @@ int main()
     while(true){
         mainDisp(board, alien);
         command(alien, board);
+        zombieTurn();
     }
     
 
