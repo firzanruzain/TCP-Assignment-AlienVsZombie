@@ -6,7 +6,7 @@ You may add one signature screenshot of your program here or above the title. Ch
 
 ## Compilation Instructions
 
-g++ main.cpp -o main.exe
+g++ pf\*.cpp main.cpp -o main.exe
 
 ## User Manual
 
