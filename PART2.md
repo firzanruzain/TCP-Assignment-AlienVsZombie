@@ -10,7 +10,7 @@
 
 List all the features completed.
 
-1. 
+1. game objects -trail, spaces, arrows 
 2. 
 3. 
 
@@ -30,7 +30,7 @@ List all the features not yet done. Remove this section if there is no incomplet
 
 ### Muhammad Firzan Ruzain Bin Firdus
 
-1. game objects -trail, spaces 
+1. game objects -trail, spaces, arrows
 
 ### Zharfan Mirza Hafiy Ma Bin Suhaidi
 
