@@ -618,47 +618,4 @@ int main()
         command(alien, board);
         zombieTurn();
     }
-    
-
-    // main display
-    /*pf::ClearScreen();
-	board.display(); //board display
-    int turn = 0;
-
-    while(true){
-        if (turn >= zombies+1){
-            turn = 0;
-        }
-        string arrow = "->  ";
-        string empty = "    ";
-        if (turn == 0){
-            cout << arrow;
-        }else{
-            cout << empty;
-        }
-        alien.display();
-        for (int i = 0; i<zombies; i++){
-            if (turn == i+1){
-                cout << arrow;
-            }else{
-                cout << empty;
-            }
-            zom[i].display();
-        }
-
-        command(alien, board);
-
-        
-        char move;
-        cout << "\nEnter command => ";
-        cin >> move;
-        cout << endl;
-        alien.move(move, board);
-        turn += 1;
-        cout << endl;
-        pf::Pause();
-        pf::ClearScreen();
-        board.display();
-        
-    }*/
 }
