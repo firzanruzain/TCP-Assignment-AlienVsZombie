@@ -37,7 +37,7 @@ List all the features not yet done. Remove this section if there is no incomplet
 
 ### Zharfan Mirza Hafiy Ma Bin Suhaidi
 
-1s. Game controls -player movements
+1. Game controls -player movements
 
 ### Farris Aiman Bin Mohd Harris
 

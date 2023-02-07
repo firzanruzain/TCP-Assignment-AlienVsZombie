@@ -134,6 +134,20 @@ class Board{
             int y = col -1;
             return ((x>= 0 && x<= dimX_) && (y>= 0 && y<= dimX_));
         };
+        void resetTrail(){
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
+            int noOfObjects = 13; // number of objects in the objects array
+            for (int i = 0; i < dimY_; ++i)
+            {
+                for (int j = 0; j < dimX_; ++j)
+                {
+                    if (map_[i][j] == '.'){
+                        int objNo = rand() % noOfObjects;
+                        map_[i][j] = objects[objNo];
+                    }
+                }
+            }
+        }
 };
 
 class Player{
@@ -439,6 +453,46 @@ void command(Player &alien, Board &board){
                     pf::ClearScreen();
                     mainDisp(board, alien);
                 }
+                else if (obj == 'P'){
+                    cout << "\nAlien finds a Pod.\n\n";
+                    board.setObject(x_,y_, 'A');
+                    alien.setX(x_);
+                    alien.setY(y_);
+                    pf::Pause();
+                    pf::ClearScreen();
+                    mainDisp(board, alien);
+                }
+                else if (obj == 'H'){
+                    cout << "\nAlien finds health.\n\n";
+                    board.setObject(x_,y_, 'A');
+                    alien.setX(x_);
+                    alien.setY(y_);
+                    pf::Pause();
+                    pf::ClearScreen();
+                    mainDisp(board, alien);
+                }
+                else if (obj == 'R'){
+                    cout << "\nAlien finds a rock.\n\n";
+                    if (direction == "up"){
+                    y_--;
+                    if (alien.getY() == board.getDimY()){
+                        break;
+                    }
+                    }else if(direction == "down"){
+                        y_++;
+                    }else if(direction == "right"){
+                        x_--;
+                    }else if(direction == "left"){
+                        x_++;
+                    }
+                    board.setObject(x_,y_, 'A');
+                    alien.setX(x_);
+                    alien.setY(y_);
+                    pf::Pause();
+                    pf::ClearScreen();
+                    mainDisp(board, alien);
+                    break;
+                }
 
                 
             }
@@ -448,6 +502,10 @@ void command(Player &alien, Board &board){
         pf::Pause();
         pf::ClearScreen();
     }
+
+    board.resetTrail();
+    cout << "\nAlien's turn ends. The trail reset." << endl;
+    pf::Pause();
 }
 
 void zombieTurn(){

@@ -2,7 +2,7 @@
 
 ## Video Demo
 
-Please provide the YouTube link to your [Video Demo](https://youtube.com).
+[Video Demo](https://youtube.com).
 
 ## Minimum Requirements
 
@@ -10,41 +10,33 @@ Please provide the YouTube link to your [Video Demo](https://youtube.com).
 
 List all the features completed.
 
-1. Cool Feature #1
-2. Cool Feature #2
-3. *add more*
+1. 
+2. 
+3. 
 
 ### To Do
 
 List all the features not yet done. Remove this section if there is no incomplete requirements.
 
-1. Cool Feature #1
-2. *add more*
+1. game objects -health, pod,
+2. game controls -arrow, save, load, quit, help
+3. Zombie & Player attacks
 
 ## Additional Features
 
-Describe the additional features that has been implemented.
+
 
 ## Contributions
 
-List down the contribution of each group members.
+### Muhammad Firzan Ruzain Bin Firdus
 
-For example:
+1. game objects -trail, spaces 
 
-### Tony Stark
+### Zharfan Mirza Hafiy Ma Bin Suhaidi
 
-1. Randomly generate game board.
-2. *add more*
 
-### Steve Rogers
+### Farris Aiman Bin Mohd Harris
 
-1. Zombie movement and attack behaviour.
-2. *add more*
-
-### Dr. Strange
-
-1. Implement all game objects.
-2. *add more*
 
 ## Problems Encountered & Solutions
 
