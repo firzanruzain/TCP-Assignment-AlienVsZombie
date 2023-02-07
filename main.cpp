@@ -493,9 +493,11 @@ void command(Player &alien, Board &board){
                     mainDisp(board, alien);
                     break;
                 }
-
-                
             }
+            turn++;
+            board.resetTrail();
+            cout << "\nAlien's turn ends. The trail reset.\n" << endl;
+            pf::Pause();
     }else{
         cout << "\nPlease enter valid commands only\n";
         cout << "Enter help for a list of available commands\n\n";
@@ -503,19 +505,17 @@ void command(Player &alien, Board &board){
         pf::ClearScreen();
     }
 
-    board.resetTrail();
-    cout << "\nAlien's turn ends. The trail reset." << endl;
-    pf::Pause();
+    
 }
 
 void zombieTurn(){
     for (int i=0; i<zombies; i++){
-        turn++;
         pf::ClearScreen();
         mainDisp(board, alien);
         zom[i].move(board);
+        turn++;
     }
-    turn++;
+
 }
 
 int main()
@@ -615,7 +615,11 @@ int main()
 
     while(true){
         mainDisp(board, alien);
-        command(alien, board);
-        zombieTurn();
+        if(turn == 0){
+            command(alien, board);
+        }
+        else if (turn>0){
+            zombieTurn();
+        }
     }
 }
