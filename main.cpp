@@ -472,7 +472,7 @@ void command(Player &alien, Board &board){
                     mainDisp(board, alien);
                 }
                 else if (obj == 'R'){
-                    cout << "\nAlien finds a rock.\n\n";
+                    cout << "\nAlien hits a rock.\n\n";
                     if (direction == "up"){
                     y_--;
                     if (alien.getY() == board.getDimY()){
@@ -492,6 +492,38 @@ void command(Player &alien, Board &board){
                     pf::ClearScreen();
                     mainDisp(board, alien);
                     break;
+                }
+                else if (obj == '>' || obj == '<' || obj == '^' || obj == 'v'){
+                    cout << "\nAlien finds an arrow.\n\n";
+                    switch (obj)
+                    {
+                    case '>':
+                        direction = "right";
+                        move = board.getDimX() - x_;
+                        break;
+                    case '<':
+                        direction = "left";
+                        move = x_ - 1;
+                        break;
+                    case '^':
+                        direction = "up";
+                        move = board.getDimY() - y_;
+                        break;
+                    case 'v':
+                        direction = "down";
+                        move = y_ - 1;
+                        break;
+                    
+                    default:
+                        break;
+                    }
+                    i=-1;
+                    board.setObject(x_,y_, 'A');
+                    alien.setX(x_);
+                    alien.setY(y_);
+                    pf::Pause();
+                    pf::ClearScreen();
+                    mainDisp(board,alien);
                 }
             }
             turn++;
@@ -599,6 +631,7 @@ int main()
     
     board.setDimX(cols); // set board cols and rows 
     board.setDimY(rows);
+    board.init(cols,rows);
     alien.spawn(board);
 
     for (int i = 0; i<zombies; i++){
