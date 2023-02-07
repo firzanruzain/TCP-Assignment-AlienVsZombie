@@ -10,9 +10,6 @@ g++ pf\\*.cpp main.cpp -o main.exe
 
 ## User Manual
 
-Please provide the user manual on how to use your program.
-
-Please DO NOT change the Progress Log below. Leave it as it is.
 
 ## Progress Log
 
