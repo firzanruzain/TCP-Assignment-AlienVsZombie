@@ -15,6 +15,7 @@
 #include <cstdlib> // for system()
 #include <ctime>   // for time() in srand( time(NULL) );
 #include <iomanip> // for setw()
+#include <fstream> // for saving/loading files
 using namespace std;
 
 class Board{
@@ -153,6 +154,32 @@ class Board{
                 }
             }
         }
+        int getObjectX(char obj){
+            int x;
+            for (int i = 0; i < dimY_; ++i)
+            {
+                for (int j = 0; j < dimX_; ++j)
+                {
+                    if (map_[i][j] == obj){
+                        x = j+1;
+                    }
+                }
+            }
+            return x;
+        }
+        int getObjectY(char obj){
+            int y;
+            for (int i = 0; i < dimY_; ++i)
+            {
+                for (int j = 0; j < dimX_; ++j)
+                {
+                    if (map_[i][j] == obj){
+                        y = dimY_ - i;
+                    }
+                }
+            }
+            return y;
+        }
 };
 
 class Player{
@@ -285,8 +312,14 @@ class Zombie{
         int getX(){
             return x_;
         }
+        void setX(int x){
+            x_ = x;
+        }
         int getY(){
             return y_;
+        }
+        void setY(int y){
+            y_ = y;
         }
         int getLife(){
             return life_;
@@ -390,6 +423,7 @@ void mainDisp(Board &board, Player &alien){
         cout << empty;
     }
     alien.display();
+    cout << alien.getX() << " " << alien.getY() << endl;
     for (int i = 0; i<zombies; i++){
         if (turn == i+1){
             cout << arrow;
@@ -398,6 +432,187 @@ void mainDisp(Board &board, Player &alien){
         }
         zom[i].display();
         }
+}
+
+void saveGame(){
+    ofstream myfile;
+    string filename;
+    cout << "Enter file name => ";
+    cin >> filename;
+    filename += ".txt";
+    myfile.open(filename);
+
+    myfile << board.getDimX() << endl; // print dimX
+    myfile << board.getDimY() << endl;
+
+    for (int i = 0; i<board.getDimY(); i++){
+        for (int j = 0; j<board.getDimX(); j++){
+            myfile << board.getObjectRaw(i,j) << "|";
+        }
+        myfile << endl;
+    }
+
+    myfile << alien.getLife() << "," << alien.getAttack() << endl;
+
+    for (int i = 0; i<zombies; i++){
+        myfile << zom[i].getId() << "," << zom[i].getLife() << "," << zom[i].getAttack() << "," << zom[i].getRange();
+
+        if (i != zombies-1){
+            myfile << endl;
+        }
+    }
+
+    myfile.close();
+}
+
+void loadGame(){
+    // starts here for load file
+    string filename;
+    ifstream readFile;
+    while(true){
+        cout << "Enter file name to load => ";
+        cin >> filename;
+        filename = filename + ".txt";
+        cout << "File name = " << filename << endl;
+        readFile.open(filename);
+        if(readFile){
+            cout << "File found...." << endl;
+            cout << "Loading game..." << endl;
+            pf::Pause();
+            pf::ClearScreen();
+            break;
+        }else{
+            cout << "File not found." << endl;
+            pf::Pause();
+            pf::ClearScreen();
+        }
+    }
+    
+    string myText;
+    int counter = 1;
+
+    int dimX;
+    int dimY;
+
+    // get dimx and dimy first
+    while(getline(readFile, myText)){
+
+        if(counter == 1){
+            dimX = stoi(myText);
+        }
+        else if(counter == 2){
+            dimY = stoi(myText);
+            break;
+        }
+        counter++;
+    }
+
+    board.init(dimX, dimY);
+    
+    counter = 0; // reset counter
+    // get game objects & characters on map
+    while(getline(readFile, myText)){
+        for (int i = 0; i<myText.length(); i++){
+            if (myText[i] != '|'){
+                char obj = myText[i];
+                board.setObjectRaw(counter, i/2, obj);
+            }
+        }
+        counter++;
+        if (counter == dimY){
+            break;
+        }
+    }
+
+    string attributes = "";
+    vector<vector<int>> att;
+    int lines = 1;
+    int size = 0;
+    att.resize(lines);
+    att[0].resize(size);
+
+    while(getline(readFile,myText)){
+        for (int i = 0; i<myText.length(); i++){
+            if (myText[i] == ','){
+                int num = stoi(attributes);
+                att[lines-1].push_back(num);
+                size++;
+                att[lines-1].resize(size);
+
+                attributes.clear();
+            }else if (i == myText.length()-1){
+                attributes.push_back(myText[i]);
+                int num = stoi(attributes);
+                att[lines-1].push_back(num);
+                size++;
+                att[lines-1].resize(size);
+
+                attributes.clear();
+            }else if (myText[i] != ','){
+                attributes.push_back(myText[i]);
+            }
+        }
+        lines++;
+        size = 0;
+        att.resize(lines);
+    }
+    lines--;
+    att.resize(lines);
+    zombies = lines-1;
+
+    /*for (int i =0; i<lines; i++){
+        size = att[i].size();
+        for (int j=0; j<size; j++){
+            cout << att[i][j] << " ";
+        }
+        cout << endl;
+    }*/
+
+    alien.setLife(att[0][0]);
+    alien.setAttack(att[0][1]);
+
+    zom.clear();
+    for (int i = 1; i<zombies+1; i++){
+        char idw;
+        size = att[i].size();
+        for(int j = 0; j<size; j++){
+            switch (j)
+            {
+            case 0:
+                idw = '0'+att[i][j];
+                s.setId(idw);
+                break;
+            
+            case 1:
+                s.setLife(att[i][j]);
+                break;
+            
+            case 2:
+                s.setAttack(att[i][j]);
+                break;
+            
+            case 3:
+                s.setRange(att[i][j]);
+                break;
+            default:
+                break;
+            }
+        }
+        zom.push_back(s);
+    }
+
+    // setting characters x and y back
+    alien.setX(board.getObjectX('A'));
+    alien.setY(board.getObjectY('A'));
+
+    for (int i = 0; i<zombies; i++){
+        zom[i].setX(board.getObjectX(zom[i].getId()));
+        zom[i].setY(board.getObjectY(zom[i].getId()));
+    }
+
+    readFile.close();
+
+    // end here for load file
 }
 
 void command(Player &alien, Board &board){
@@ -418,6 +633,10 @@ void command(Player &alien, Board &board){
         cout << "9. help    - Display available commands.\n\n";
         pf::Pause();
         mainDisp(board, alien);
+    }else if (command == "save"){
+        saveGame();
+    }else if (command == "load"){
+        loadGame();
     }else if (command == "up" || command == "down" || command == "left" || command == "right" ){
         //alien.move(command, board);
         int y_ = alien.getY();

@@ -414,21 +414,29 @@ int main() {
         zom[i].spawn(board);
     }
 
-    cout << "Before Load\n";
-    board.display();
-    cout << endl;
-    alien.display();
-    for (int i = 0; i<zombies; i++){
-        zom[i].display();
+
+    // starts here for load file
+    string filename;
+    ifstream readFile;
+    while(true){
+        cout << "Enter file name to load => ";
+        cin >> filename;
+        filename = filename + ".txt";
+        cout << "File name = " << filename << endl;
+        readFile.open(filename);
+        if(readFile){
+            cout << "File found...." << endl;
+            cout << "Loading game..." << endl;
+            pf::Pause();
+            pf::ClearScreen();
+            break;
+        }else{
+            cout << "File not found." << endl;
+            pf::Pause();
+            pf::ClearScreen();
+        }
     }
-    cout << "\n\n";
-    cout << "alien x => " << alien.getX() << endl;
-    cout << "alien y => " << alien.getY() << endl;
-
-    pf::Pause();
-    pf::ClearScreen();
-
-    ifstream readFile("test.txt");
+    
     string myText;
     int counter = 1;
 
@@ -542,8 +550,19 @@ int main() {
         zom.push_back(s);
     }
 
+    // setting characters x and y back
+    alien.setX(board.getObjectX('A'));
+    alien.setY(board.getObjectY('A'));
+
+    for (int i = 0; i<zombies; i++){
+        zom[i].setX(board.getObjectX(zom[i].getId()));
+        zom[i].setY(board.getObjectY(zom[i].getId()));
+    }
+
     readFile.close();
-    cout << endl;
+
+    // end here for load file
+
     board.display();
     cout << endl;
     alien.display();
@@ -551,16 +570,7 @@ int main() {
         zom[i].display();
     }
     
-    // setting characters x and y back
-    alien.setX(board.getObjectX('A'));
-    alien.setY(board.getObjectX('A'));
-
-    for (int i = 0; i<zombies; i++){
-        zom[i].setX(board.getObjectX(zom[i].getId()));
-        zom[i].setY(board.getObjectY(zom[i].getId()));
-        cout << "Zombie " << zom[i].getId() << " x = " << zom[i].getX() << endl;
-        cout << "Zombie " << zom[i].getId() << " y = " << zom[i].getY() << endl; 
-    }
+    
 
     return 0;
 }

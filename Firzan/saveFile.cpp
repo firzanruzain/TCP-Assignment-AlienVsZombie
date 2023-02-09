@@ -366,8 +366,13 @@ int main() {
     }
     board.display();
 
+    // starts here for save file
     ofstream myfile;
-    myfile.open("test.txt");
+    string filename;
+    cout << "Enter file name => ";
+    cin >> filename;
+    filename += ".txt";
+    myfile.open(filename);
 
     myfile << board.getDimX() << endl; // print dimX
     myfile << board.getDimY() << endl;
@@ -390,5 +395,7 @@ int main() {
     }
 
     myfile.close();
+
+    // ends here for save file
     return 0;
 }
