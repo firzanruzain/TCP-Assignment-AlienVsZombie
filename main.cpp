@@ -117,13 +117,18 @@ class Board{
         char getObject(int col, int row){
             return map_[dimY_ - row][col - 1];
         };
+        char getObjectRaw(int x, int y){
+            return map_[x][y];
+        }
         void setObject(int col, int row, char object){
             int x = dimY_ - row;
             int y = col -1;
 
             map_[x][y] = object;
         };
-
+        void setObjectRaw(int x, int y, char obj){
+            map_[x][y] = obj;
+        }
         bool isEmpty(int col, int row){
             int x = dimY_ - row;
             int y = col -1;

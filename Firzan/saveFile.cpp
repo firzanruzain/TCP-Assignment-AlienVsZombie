@@ -1,4 +1,4 @@
-// #include "../pf/helper.h"
+#include "../pf/helper.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -130,26 +130,263 @@ class Board{
         };
 };
 
+class Player{
+    private:
+        int x_, y_;
+        int life_, attack_;
+    public:
+        Player(int life = 100, int attack = 0){
+            life_ = life;
+            attack_ = attack;
+        }
+        int getX(){
+            return x_;
+        }
+        int getY(){
+            return y_;
+        }
+        void setX(int x){
+            x_ = x;
+        }
+        void setY(int y){
+            y_ = y;
+        }
+        void setLife(int life){
+        life_ = life;
+        }
+        void setAttack(int attack){
+            attack_ = attack;
+        }
+        int getLife(){
+            return life_;
+        }
+        int getAttack(){
+            return attack_;
+        }
+        void spawn(Board &board){
+            x_ = board.getDimX()/2 + 1;
+            y_ = board.getDimY()/2 + 1; 
+            board.setObject(x_, y_, 'A');
+        }
+        void move(string command, Board &board){
+
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
+            int noOfObjects = 13; // number of objects in the objects array
+            int objNo = rand() % noOfObjects;
+            board.setObject(x_, y_, objects[objNo]);
+            int move;
+            if (command == "up"){
+                move = board.getDimY() - y_;
+            }else if(command == "down"){
+                move = y_ - 1;
+            }else if(command == "right"){
+                move = board.getDimX() - x_;
+            }else if(command == "left"){
+                move = x_ - 1;
+            }
+
+            for(int i = 0; i<move; i++){
+                    board.setObject(x_,y_, '.');
+                    if (command == "up"){
+                        y_++;
+                    }else if(command == "down"){
+                        y_--;
+                    }else if(command == "right"){
+                        x_++;
+                    }else if(command == "left"){
+                        x_--;
+                    }
+                    char obj = board.getObject(x_,y_);
+                    switch (obj)
+                    {
+                    case ' ':
+                        cout << "\nAlien finds a empty space.\n\n";
+                        board.setObject(x_,y_, 'A');
+                        pf::Pause();
+                        pf::ClearScreen();
+                        board.display();
+                        break;
+                    
+                    default:
+                        cout << "\nAlien finds a.\n\n";
+                        board.setObject(x_,y_, 'A');
+                        pf::Pause();
+                        pf::ClearScreen();
+                        board.display();
+                        break;
+                    }
+                    
+                }
+
+
+            board.setObject(x_, y_, 'A');
+        }
+
+        void display(){
+            cout << "Alien   : Life " << life_ << ", Attack " << attack_ << endl;
+        }
+
+
+        
+};
+
+class Zombie{
+    private:
+        int x_,y_, life_, attack_, range_ ;
+        char id_;
+    public:
+        Zombie(){
+            life_ = (rand()%5+1)*50;
+            attack_ = (rand()%6+1)*5;
+            range_ = (rand()%10+1);
+        }
+        void spawn(Board &board){
+            while(1){
+                x_ = rand() % board.getDimX() + 1;
+                y_ = rand() % board.getDimY() + 1;
+                if (board.getObject(x_, y_) == ' '){
+                    break;
+                }
+            }
+            board.setObject(x_, y_, id_);
+        }
+        char getId(){
+            return id_;
+        }
+        void setId(char id){
+            id_ = id;
+        }
+
+        int getX(){
+            return x_;
+        }
+        int getY(){
+            return y_;
+        }
+        int getLife(){
+            return life_;
+        }
+        int getAttack(){
+            return attack_;
+        }
+        int getRange(){
+            return range_;
+        }
+        void setLife(int life){
+            life_ = life;
+        }
+        void setAttack(int attack){
+            attack_ = attack;
+        }
+        void setRange(int range){
+            range_ = range;
+        }
+        void randomizeAttributes(){
+            life_ = ((rand()%5)+1)*50;
+            attack_ = ((rand()%6)+1)*5;
+            range_ = (rand()%5)+1;
+        }
+        
+
+        void move(Board &board){
+            char possibleHeading[] = {'^', '>', '<', 'v'};
+            bool invalid = true;
+            char heading;
+            while(invalid){
+                heading = possibleHeading[rand() % 4];
+                if (heading == '^' && y_ < board.getDimY()){
+                    invalid = false;
+                }
+                else if (heading == 'v' && y_ > 1){
+                    invalid = false;
+                }
+                else if (heading == '>' && x_ < board.getDimX()){
+                    invalid = false;
+                }
+                else if (heading == '<' && x_ > 1){
+                    invalid = false;
+                }
+            }
+            
+
+            cout << "\nZombie " << id_ << " ";
+
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
+            int noOfObjects = 13; // number of objects in the objects array
+            int objNo = rand() % noOfObjects;
+            board.setObject(x_, y_, objects[objNo]);
+
+            switch(heading){
+                case '^':
+                    y_ += 1;
+                    cout << "moves up." << endl;
+                    break;
+                case '>':
+                    x_ += 1;
+                    cout << "moves right." << endl;
+                    break;
+                case '<':
+                    x_ -= 1;
+                    cout << "moves left." << endl;
+                    break;
+                case 'v':
+                    y_ -= 1;
+                    cout << "moves down." << endl;
+                    break;
+
+            }
+            pf::Pause();
+            board.setObject(x_, y_, id_);
+        }
+        void display(){
+            cout << "Zombie " << id_ << ": Life " << life_ << ", Attack " << attack_ << ", Range " << range_ << endl;
+        }
+};
+
+vector<Zombie> zom; // create zombies
+Zombie s;
+int zombies = 2;
+
 int main() {
 
     Board board;
+    Player alien;
     board.init(5, 9);
+    alien.spawn(board);
+    for (int i = 0; i<zombies; i++){
+        char id = '0'+i+1;
+        s.setId(id);
+        s.randomizeAttributes();
+        zom.push_back(s);
+    }
+
+    // spawn zombies
+	for (int i = 0; i<zombies; i++){
+        zom[i].spawn(board);
+    }
     board.display();
 
     ofstream myfile;
-    cout << "Enter String => ";
-    string line;
-    cin >> line;
     myfile.open("test.txt");
 
     myfile << board.getDimX() << endl; // print dimX
-    myfile << board.getDimY() << endl << endl;
+    myfile << board.getDimY() << endl;
 
     for (int i = 0; i<board.getDimY(); i++){
         for (int j = 0; j<board.getDimX(); j++){
             myfile << board.getObjectRaw(i,j) << "|";
         }
         myfile << endl;
+    }
+
+    myfile << alien.getLife() << "," << alien.getAttack() << endl;
+
+    for (int i = 0; i<zombies; i++){
+        myfile << zom[i].getLife() << "," << zom[i].getAttack() << "," << zom[i].getRange();
+
+        if (i != zombies-1){
+            myfile << endl;
+        }
     }
 
     myfile.close();
