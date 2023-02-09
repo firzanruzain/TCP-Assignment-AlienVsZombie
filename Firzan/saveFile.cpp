@@ -348,10 +348,10 @@ Zombie s;
 int zombies = 2;
 
 int main() {
-
+    srand(time(NULL));
     Board board;
     Player alien;
-    board.init(5, 9);
+    board.init(11, 3);
     alien.spawn(board);
     for (int i = 0; i<zombies; i++){
         char id = '0'+i+1;
@@ -382,7 +382,7 @@ int main() {
     myfile << alien.getLife() << "," << alien.getAttack() << endl;
 
     for (int i = 0; i<zombies; i++){
-        myfile << zom[i].getLife() << "," << zom[i].getAttack() << "," << zom[i].getRange();
+        myfile << zom[i].getId() << "," << zom[i].getLife() << "," << zom[i].getAttack() << "," << zom[i].getRange();
 
         if (i != zombies-1){
             myfile << endl;
