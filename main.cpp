@@ -423,7 +423,6 @@ void mainDisp(Board &board, Player &alien){
         cout << empty;
     }
     alien.display();
-    cout << alien.getX() << " " << alien.getY() << endl;
     for (int i = 0; i<zombies; i++){
         if (turn == i+1){
             cout << arrow;
