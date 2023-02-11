@@ -27,7 +27,6 @@ class Board{
         Board(int dimX = 15, int dimY = 5){
             init(dimX, dimY);
         };
-
         void init(int dimX, int dimY){
             dimX_ = dimX;
             dimY_ = dimY;
@@ -49,12 +48,19 @@ class Board{
                 }
             }
         };
-
         void display() const{
             // comment this out during testing
             // system("cls"); // OR system("clear"); for Linux / MacOS
             string title = "= Alien VS Zombie =";
-            cout << "  " << setw((dimX_*2) - ((dimX_*2 - title.length())/2)) << title << endl;
+            string titleM[3] = {"Alien", "=   VS   =", "Zombie"};
+            if (title.length() > dimX_*4){
+                for (int i = 0; i<3; i++){
+                    cout << "  " << setw((dimX_*4) - ((dimX_*4 - titleM[i].length())/2)) << titleM[i] << endl;
+                }
+            }else{
+                cout << "  " << setw((dimX_*4) - ((dimX_*4 - title.length())/2)) << title << endl;
+            }
+            
             // for each row
             for (int i = 0; i < dimY_; ++i)
             {
@@ -62,7 +68,7 @@ class Board{
                 cout << "  ";
                 for (int j = 0; j < dimX_; ++j)
                 {
-                    cout << "+-";
+                    cout << "+---";
                 }
                 cout << "+" << endl;
                 // display row number
@@ -70,7 +76,7 @@ class Board{
                 // display cell content and border of each column
                 for (int j = 0; j < dimX_; j++)
                 {
-                    cout << "|" << map_[i][j];
+                    cout << "|" << " " << map_[i][j] << " ";
                 }
                 cout << "|" << endl;
             }
@@ -78,43 +84,48 @@ class Board{
             cout << "  ";
             for (int j = 0; j < dimX_; ++j)
             {
-                cout << "+-";
+                cout << "+---";
             }
             cout << "+" << endl;
             // display column number
-            cout << "  ";
-            for (int j = 0; j < dimX_; ++j)
-            {
-                int digit = (j + 1) / 10;
+            if (dimX_>9){
                 cout << " ";
-                if (digit == 0)
-                    cout << " ";
-                else
-                    cout << digit;
+                for (int j = 0; j < dimX_; ++j)
+                {
+                    int digit = (j + 1) / 10;
+                    cout << "  ";
+                    if (digit == 0)
+                        cout << "  ";
+                    else
+                        cout << " " << digit;
+                }
+                cout << endl;
             }
-            cout << endl;
-            cout << "  ";
+            cout << " ";
             for (int j = 0; j < dimX_; ++j)
             {
-                cout << " " << (j + 1) % 10;
+                cout << "   " << (j + 1) % 10;
             }
             cout << endl << endl;
         };
-
+        char getRandomObj(){
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
+            int noOfObjects = 13; // number of objects in the objects array
+            int objNo = rand() % noOfObjects;
+            return objects[objNo];
+        }
         int getDimX(){
             return dimX_;
         };
         int getDimY(){
             return dimY_;
         };
-
         void setDimX(int x){
             dimX_ = x;
         };
         void setDimY(int y){
             dimY_ = y;
         };
-
         char getObject(int col, int row){
             return map_[dimY_ - row][col - 1];
         };
@@ -180,6 +191,47 @@ class Board{
             }
             return y;
         }
+        void rock(int col, int row){
+            int x = dimY_ - row;
+            int y = col -1;
+            char newObj;
+            while(true){
+                newObj = getRandomObj();
+                if (newObj != 'R'){
+                    break;
+                }
+            }
+            string object;
+            switch (newObj)
+            {
+            case 'H':
+                object = "a Health";
+                break;
+            case 'P':
+                object = "a Pod";
+                break;
+            case ' ':
+                object = "Nothing";
+                break;
+            case '>':
+                object = "a Right arrow";
+                break;
+            case '<':
+                object = "a Left arrow";
+                break;
+            case 'v':
+                object = "a Down arrow";
+                break;
+            case '^':
+                object = "a Up arrow";
+                break;
+
+            default:
+                break;
+            }
+            cout << endl << "There is " << object << " beneath it." << endl;
+            map_[x][y] = newObj;
+        }
 };
 
 class Player{
@@ -220,60 +272,6 @@ class Player{
             y_ = board.getDimY()/2 + 1; 
             board.setObject(x_, y_, 'A');
         }
-        void move(string command, Board &board){
-
-            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
-            int noOfObjects = 13; // number of objects in the objects array
-            int objNo = rand() % noOfObjects;
-            board.setObject(x_, y_, objects[objNo]);
-            int move;
-            if (command == "up"){
-                move = board.getDimY() - y_;
-            }else if(command == "down"){
-                move = y_ - 1;
-            }else if(command == "right"){
-                move = board.getDimX() - x_;
-            }else if(command == "left"){
-                move = x_ - 1;
-            }
-
-            for(int i = 0; i<move; i++){
-                    board.setObject(x_,y_, '.');
-                    if (command == "up"){
-                        y_++;
-                    }else if(command == "down"){
-                        y_--;
-                    }else if(command == "right"){
-                        x_++;
-                    }else if(command == "left"){
-                        x_--;
-                    }
-                    char obj = board.getObject(x_,y_);
-                    switch (obj)
-                    {
-                    case ' ':
-                        cout << "\nAlien finds a empty space.\n\n";
-                        board.setObject(x_,y_, 'A');
-                        pf::Pause();
-                        pf::ClearScreen();
-                        board.display();
-                        break;
-                    
-                    default:
-                        cout << "\nAlien finds a.\n\n";
-                        board.setObject(x_,y_, 'A');
-                        pf::Pause();
-                        pf::ClearScreen();
-                        board.display();
-                        break;
-                    }
-                    
-                }
-
-
-            board.setObject(x_, y_, 'A');
-        }
-
         void display(){
             cout << "Alien   : Life " << life_ << ", Attack " << attack_ << endl;
         }
@@ -433,13 +431,42 @@ void mainDisp(Board &board, Player &alien){
         }
 }
 
+void refreshScreen(){
+    pf::Pause();
+    mainDisp(board, alien);
+}
+
 void saveGame(){
     ofstream myfile;
+    ifstream testFile;
     string filename;
-    cout << "Enter file name => ";
-    cin >> filename;
-    filename += ".txt";
+
+    while(true){
+        filename.clear();
+        cout << endl << "Enter file name => ";
+        cin >> filename;
+        filename += ".txt";
+
+        testFile.open(filename);
+        if (testFile){
+            char option;
+            cout << "File already exists. You want to overwrite? (y/n) => ";
+            cin >> option;
+            if (option == 'y'){
+                break;
+            }else{
+                mainDisp(board, alien);
+            }
+        }else{
+            break;
+        }
+        testFile.close();
+    }
+    
+
+
     myfile.open(filename);
+    cout << endl << "Saving file in " << filename << endl << endl;
 
     myfile << board.getDimX() << endl; // print dimX
     myfile << board.getDimY() << endl;
@@ -460,7 +487,8 @@ void saveGame(){
             myfile << endl;
         }
     }
-
+    cout << "File is saved." << endl << endl;
+    pf::Pause();
     myfile.close();
 }
 
@@ -478,12 +506,10 @@ void loadGame(){
             cout << "File found...." << endl;
             cout << "Loading game..." << endl;
             pf::Pause();
-            pf::ClearScreen();
             break;
         }else{
             cout << "File not found." << endl;
             pf::Pause();
-            pf::ClearScreen();
         }
     }
     
@@ -507,7 +533,8 @@ void loadGame(){
     }
 
     board.init(dimX, dimY);
-    
+    cols = dimX;
+    rows = dimY;
     counter = 0; // reset counter
     // get game objects & characters on map
     while(getline(readFile, myText)){
@@ -558,14 +585,6 @@ void loadGame(){
     lines--;
     att.resize(lines);
     zombies = lines-1;
-
-    /*for (int i =0; i<lines; i++){
-        size = att[i].size();
-        for (int j=0; j<size; j++){
-            cout << att[i][j] << " ";
-        }
-        cout << endl;
-    }*/
 
     alien.setLife(att[0][0]);
     alien.setAttack(att[0][1]);
@@ -637,7 +656,6 @@ void command(Player &alien, Board &board){
     }else if (command == "load"){
         loadGame();
     }else if (command == "up" || command == "down" || command == "left" || command == "right" ){
-        //alien.move(command, board);
         int y_ = alien.getY();
         int x_ = alien.getX();
         int move;
@@ -669,38 +687,25 @@ void command(Player &alien, Board &board){
 
                 if (obj == ' '){
                     cout << "\nAlien finds a empty space.\n\n";
-                    board.setObject(x_,y_, 'A');
-                    alien.setX(x_);
-                    alien.setY(y_);
-                    pf::Pause();
-                    pf::ClearScreen();
-                    mainDisp(board, alien);
+                }
+                else if (obj == '.'){
                 }
                 else if (obj == 'P'){
                     cout << "\nAlien finds a Pod.\n\n";
-                    board.setObject(x_,y_, 'A');
-                    alien.setX(x_);
-                    alien.setY(y_);
-                    pf::Pause();
-                    pf::ClearScreen();
-                    mainDisp(board, alien);
                 }
                 else if (obj == 'H'){
                     cout << "\nAlien finds health.\n\n";
-                    board.setObject(x_,y_, 'A');
-                    alien.setX(x_);
-                    alien.setY(y_);
-                    pf::Pause();
-                    pf::ClearScreen();
-                    mainDisp(board, alien);
                 }
                 else if (obj == 'R'){
                     cout << "\nAlien hits a rock.\n\n";
+                    refreshScreen();
+                    board.rock(x_,y_);
+                    refreshScreen();
                     if (direction == "up"){
-                    y_--;
-                    if (alien.getY() == board.getDimY()){
-                        break;
-                    }
+                        y_--;
+                        if (alien.getY() == board.getDimY()){
+                            break;
+                        }
                     }else if(direction == "down"){
                         y_++;
                     }else if(direction == "right"){
@@ -708,13 +713,7 @@ void command(Player &alien, Board &board){
                     }else if(direction == "left"){
                         x_++;
                     }
-                    board.setObject(x_,y_, 'A');
-                    alien.setX(x_);
-                    alien.setY(y_);
-                    pf::Pause();
-                    pf::ClearScreen();
-                    mainDisp(board, alien);
-                    break;
+                    move = 0;
                 }
                 else if (obj == '>' || obj == '<' || obj == '^' || obj == 'v'){
                     cout << "\nAlien finds an arrow.\n\n";
@@ -741,23 +740,23 @@ void command(Player &alien, Board &board){
                         break;
                     }
                     i=-1;
-                    board.setObject(x_,y_, 'A');
-                    alien.setX(x_);
-                    alien.setY(y_);
-                    pf::Pause();
-                    pf::ClearScreen();
-                    mainDisp(board,alien);
                 }
+                board.setObject(x_,y_, 'A');
+                alien.setX(x_);
+                alien.setY(y_);
+                refreshScreen();
             }
             turn++;
             board.resetTrail();
+            if (alien.getX() == 1 || alien.getY() == 1 || alien.getX() == cols || alien.getY() == rows){
+                cout << "\nAlien hits the boudaries." << endl;
+            }
             cout << "\nAlien's turn ends. The trail reset.\n" << endl;
             pf::Pause();
     }else{
         cout << "\nPlease enter valid commands only\n";
         cout << "Enter help for a list of available commands\n\n";
         pf::Pause();
-        pf::ClearScreen();
     }
 
     
@@ -765,7 +764,6 @@ void command(Player &alien, Board &board){
 
 void zombieTurn(){
     for (int i=0; i<zombies; i++){
-        pf::ClearScreen();
         mainDisp(board, alien);
         zom[i].move(board);
         turn++;
