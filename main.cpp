@@ -18,6 +18,7 @@
 #include <fstream> // for saving/loading files
 using namespace std;
 
+// list classes
 class Board{
     private:
       vector<vector<char>> map_; // convention to put trailing underscore
@@ -233,7 +234,6 @@ class Board{
             map_[x][y] = newObj;
         }
 };
-
 class Player{
     private:
         int x_, y_;
@@ -274,12 +274,8 @@ class Player{
         }
         void display(){
             cout << "Alien   : Life " << life_ << ", Attack " << attack_ << endl;
-        }
-
-
-        
+        }     
 };
-
 class Zombie{
     private:
         int x_,y_, life_, attack_, range_ ;
@@ -399,13 +395,111 @@ class Zombie{
         }
 };
 
+// declaring important objects and variables
 vector<Zombie> zom; // create zombies
 Zombie s;
 Board board; // create board
 Player alien; // create player
 int rows,cols,zombies;
 int turn = 0;
+bool playing = true;
 
+// list of standalone functions
+void init(){
+    srand(time(NULL));
+    pf::ClearScreen();
+    cout << "Default Game Settings" << endl;
+    cout << "-----------------------" << endl;
+    cout << "Board Rows    : 5" << endl;
+    cout << "Board Columns : 9" << endl;
+    cout << "Zombie Count  : 1" << endl << endl;
+    rows = 5;
+    cols = 9;
+    zombies = 1;
+
+    while(true){
+        cout << "Do you wish to change game settings? (y/n)? => ";
+        char option;
+        cin >> option;
+
+        if (option == 'y'){
+            
+            change:
+            pf::ClearScreen();
+
+            while(1){
+                cout << "Board Rows    : ";
+                cin >> rows;
+                if (rows % 2 == 0){
+                    cout << "Use odd number only!!!\n";
+                }
+                else{
+                    break;
+                }
+            }
+            
+            while(1){
+                cout << "Board Columns : ";
+                cin >> cols;
+                if (cols % 2 == 0){
+                    cout << "Use odd number only!!!\n";
+                }
+                else{
+                    break;
+                }
+            }
+
+            while(1){
+                cout << "Zombie Count  : ";
+                cin >> zombies;
+                if (cols % 2 == 0){
+                    cout << "Use odd number only!!!\n";
+                }
+                else{
+                    break;
+                }
+            }
+            pf::ClearScreen();
+            cout << "Game Settings" << endl;
+            cout << "-----------------------" << endl;
+            cout << "Board Rows    : " << rows << endl;
+            cout << "Board Columns : " << cols << endl;
+            cout << "Zombie Count  : " << zombies << endl << endl;
+            while(true){
+                cout << "Confirm this game settings? (y/n)? => ";
+                cin >> option;
+                if (option == 'y'){
+                    break;
+                }
+                else if(option == 'n'){
+                    goto change;
+                }
+            }
+            break;
+        }
+        else if (option == 'n'){
+            break;
+        }
+    }
+
+    
+    board.setDimX(cols); // set board cols and rows 
+    board.setDimY(rows);
+    board.init(cols,rows);
+    alien.spawn(board);
+
+    for (int i = 0; i<zombies; i++){
+        char id = '0'+i+1;
+        s.setId(id);
+        s.randomizeAttributes();
+        zom.push_back(s);
+    }
+
+    // spawn zombies
+	for (int i = 0; i<zombies; i++){
+        zom[i].spawn(board);
+    }
+}
 void mainDisp(Board &board, Player &alien){
     pf::ClearScreen();
 	board.display(); //board display
@@ -430,12 +524,10 @@ void mainDisp(Board &board, Player &alien){
         zom[i].display();
         }
 }
-
 void refreshScreen(){
     pf::Pause();
     mainDisp(board, alien);
 }
-
 void saveGame(){
     ofstream myfile;
     ifstream testFile;
@@ -491,7 +583,6 @@ void saveGame(){
     pf::Pause();
     myfile.close();
 }
-
 void loadGame(){
     // starts here for load file
     string filename;
@@ -632,7 +723,6 @@ void loadGame(){
 
     // end here for load file
 }
-
 void command(Player &alien, Board &board){
     string command;
     cout << "\nEnter Command => ";
@@ -655,6 +745,26 @@ void command(Player &alien, Board &board){
         saveGame();
     }else if (command == "load"){
         loadGame();
+    }else if (command == "quit"){
+        string option;
+        cout << "\nWant to save the game? (y/n/cancel) => ";
+        while (true){
+            cin >> option;
+            if (option == "cancel"){
+                break;
+            }else if(option == "y"){
+                saveGame();
+                cout << "Quiting the game now... goodbye.";
+                playing = false;
+                break;
+            }else if(option == "n"){
+                cout << "\nQuiting the game now... goodbye.\n";
+                pf::Pause();
+                pf::ClearScreen();
+                playing = false;
+                break;
+            }
+        }
     }else if (command == "up" || command == "down" || command == "left" || command == "right" ){
         int y_ = alien.getY();
         int x_ = alien.getX();
@@ -761,7 +871,6 @@ void command(Player &alien, Board &board){
 
     
 }
-
 void zombieTurn(){
     for (int i=0; i<zombies; i++){
         mainDisp(board, alien);
@@ -770,104 +879,8 @@ void zombieTurn(){
     }
 
 }
-
-int main()
-{
-    srand(time(NULL));
-    pf::ClearScreen();
-    cout << "Default Game Settings" << endl;
-    cout << "-----------------------" << endl;
-    cout << "Board Rows    : 5" << endl;
-    cout << "Board Columns : 9" << endl;
-    cout << "Zombie Count  : 1" << endl << endl;
-    rows = 5;
-    cols = 9;
-    zombies = 1;
-
-    while(true){
-        cout << "Do you wish to change game settings? (y/n)? => ";
-        char option;
-        cin >> option;
-
-        if (option == 'y'){
-            
-            change:
-            pf::ClearScreen();
-
-            while(1){
-                cout << "Board Rows    : ";
-                cin >> rows;
-                if (rows % 2 == 0){
-                    cout << "Use odd number only!!!\n";
-                }
-                else{
-                    break;
-                }
-            }
-            
-            while(1){
-                cout << "Board Columns : ";
-                cin >> cols;
-                if (cols % 2 == 0){
-                    cout << "Use odd number only!!!\n";
-                }
-                else{
-                    break;
-                }
-            }
-
-            while(1){
-                cout << "Zombie Count  : ";
-                cin >> zombies;
-                if (cols % 2 == 0){
-                    cout << "Use odd number only!!!\n";
-                }
-                else{
-                    break;
-                }
-            }
-            pf::ClearScreen();
-            cout << "Game Settings" << endl;
-            cout << "-----------------------" << endl;
-            cout << "Board Rows    : " << rows << endl;
-            cout << "Board Columns : " << cols << endl;
-            cout << "Zombie Count  : " << zombies << endl << endl;
-            while(true){
-                cout << "Confirm this game settings? (y/n)? => ";
-                cin >> option;
-                if (option == 'y'){
-                    break;
-                }
-                else if(option == 'n'){
-                    goto change;
-                }
-            }
-            break;
-        }
-        else if (option == 'n'){
-            break;
-        }
-    }
-
-    
-    board.setDimX(cols); // set board cols and rows 
-    board.setDimY(rows);
-    board.init(cols,rows);
-    alien.spawn(board);
-
-    for (int i = 0; i<zombies; i++){
-        char id = '0'+i+1;
-        s.setId(id);
-        s.randomizeAttributes();
-        zom.push_back(s);
-    }
-
-    // spawn zombies
-	for (int i = 0; i<zombies; i++){
-        zom[i].spawn(board);
-    }
-
-    while(true){
+void playGame(){
+    while(playing){
         mainDisp(board, alien);
         if(turn == 0){
             command(alien, board);
@@ -876,4 +889,10 @@ int main()
             zombieTurn();
         }
     }
+}
+
+int main()
+{
+    init(); // intialize all game settings
+    playGame(); // starts the game
 }
