@@ -10,7 +10,7 @@
 
 List all the features completed.
 
-1. game objects -trail, spaces, arrows 
+1. game objects -trail, spaces, arrows, rocks
 2. Commands - save, load, help
 3. 
 
