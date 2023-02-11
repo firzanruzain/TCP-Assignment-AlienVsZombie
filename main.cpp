@@ -723,6 +723,12 @@ void loadGame(){
 
     // end here for load file
 }
+void quit(){
+    cout << "\nQuiting the game now... goodbye.\n";
+    pf::Pause();
+    pf::ClearScreen();
+    playing = false;
+}
 void command(Player &alien, Board &board){
     string command;
     cout << "\nEnter Command => ";
@@ -754,14 +760,10 @@ void command(Player &alien, Board &board){
                 break;
             }else if(option == "y"){
                 saveGame();
-                cout << "Quiting the game now... goodbye.";
-                playing = false;
+                quit();
                 break;
             }else if(option == "n"){
-                cout << "\nQuiting the game now... goodbye.\n";
-                pf::Pause();
-                pf::ClearScreen();
-                playing = false;
+                quit();
                 break;
             }
         }
