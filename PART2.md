@@ -39,6 +39,4 @@ List all the features not yet done. Remove this section if there is no incomplet
 ### Farris Aiman Bin Mohd Harris
 
 
-## Problems Encountered & Solutions
-
-Describe the problems encountered and provide the solutions / plan for the solutions.
+## Problems Encountered & Solutionss
