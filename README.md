@@ -17,7 +17,7 @@ g++ pf\\*.cpp main.cpp -o main.exe
 - [Part 2](PART2.md)
 
 ## Contributors
-s
+
 - Muhammad Firzan Ruzain bin Firdus
 - Zharfan Mirza Hafiy Ma Bin Suhaidi
 - Farris Aiman Bin Mohd Harris
