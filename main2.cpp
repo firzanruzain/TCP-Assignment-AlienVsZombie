@@ -1,3 +1,14 @@
+// ********************************************************* 
+// Course: TCP1101 PROGRAMMING FUNDAMENTALS 
+// Year: Trimester 1, 2022/23 (T2215) 
+// Lab: TxxL 
+// Names: Muhammad Firzan Ruzain Bin Firdus | Zharfan Mirza Hafiy Ma Bin Suhaidi | Farris Aiman Bin Mohd Harris 
+// IDs: 1211103220 | 1211101006 | 1211102060 
+// Emails: 1211103220@student.mmu.edu.my | 1211101006@student.mmu.edu.my | 1211102060@student.mmu.edu.my 
+// Phones: 01127282086 | 0136311409 | 0196639322 
+// ********************************************************* 
+
+#include "pf/helper.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -5,24 +16,6 @@
 #include <ctime>   // for time() in srand( time(NULL) );
 #include <iomanip> // for setw()
 using namespace std;
-
-void Pause()
-{
-    cout << "Pausing Now" << endl;
-    //pf::Pause();
-    cout << endl;
-}
-void ClearScreen()
-{
-    //pf::ClearScreen();
-    cout << endl;
-}
-void CreateGameBoard()
-{
-    cout << "Create Game Board" << endl;
-    //pf::CreateGameBoard();
-    //pf::ShowGameBoard();
-}
 
 class Board{
     private:
@@ -37,8 +30,8 @@ class Board{
         void init(int dimX, int dimY){
             dimX_ = dimX;
             dimY_ = dimY;
-            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'R', 'P', 'H', ' '};
-            int noOfObjects = 10; // number of objects in the objects array
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
+            int noOfObjects = 13; // number of objects in the objects array
             // create dynamic 2D array using vectors
             map_.resize(dimY_); // create empty rows
             for (int i = 0; i < dimY_; ++i)
@@ -59,21 +52,20 @@ class Board{
         void display() const{
             // comment this out during testing
             // system("cls"); // OR system("clear"); for Linux / MacOS
-            cout << " --__--__--__--__--__--__--__--_" << endl;
-            cout << " = Curiosity, Welcome to Mars! =" << endl;
-            cout << " __--__--__--__--__--__--__--__-" << endl;
+            string title = "= Alien VS Zombie =";
+            cout << setw((dimX_*2) - ((dimX_*2 - title.length())/2)) << title << endl;
             // for each row
             for (int i = 0; i < dimY_; ++i)
             {
                 // display upper border of the row
-                cout << " ";
+                cout << "  ";
                 for (int j = 0; j < dimX_; ++j)
                 {
                     cout << "+-";
                 }
                 cout << "+" << endl;
                 // display row number
-                cout << setw(2) << (dimY_ - i);
+                cout << (dimY_ - i) << " ";
                 // display cell content and border of each column
                 for (int j = 0; j < dimX_; j++)
                 {
@@ -82,14 +74,14 @@ class Board{
                 cout << "|" << endl;
             }
             // display lower border of the last row
-            cout << " ";
+            cout << "  ";
             for (int j = 0; j < dimX_; ++j)
             {
                 cout << "+-";
             }
             cout << "+" << endl;
             // display column number
-            cout << " ";
+            cout << "  ";
             for (int j = 0; j < dimX_; ++j)
             {
                 int digit = (j + 1) / 10;
@@ -100,7 +92,7 @@ class Board{
                     cout << digit;
             }
             cout << endl;
-            cout << " ";
+            cout << "  ";
             for (int j = 0; j < dimX_; ++j)
             {
                 cout << " " << (j + 1) % 10;
@@ -147,11 +139,18 @@ class Board{
 class Player{
     private:
         int x_, y_;
+        int life_, attack_;
     public:
-        Player(Board &board){
+        Player(Board &board, int life = 100, int attack = 0){
             x_ = board.getDimX()/2 + 1;
             y_ = board.getDimY()/2 + 1; 
-
+            life_ = life;
+            attack_ = attack;
+            board.setObject(x_, y_, 'A');
+        }
+        void reset(Board &board){
+            x_ = board.getDimX()/2 + 1;
+            y_ = board.getDimY()/2 + 1; 
             board.setObject(x_, y_, 'A');
         }
         int getX(){
@@ -160,13 +159,46 @@ class Player{
         int getY(){
             return y_;
         }
+        void setLife(int life){
+        life_ = life;
+        }
+        void setAttack(int attack){
+            attack_ = attack;
+        }
+        int getLife(){
+            return life_;
+        }
+        int getAttack(){
+            return attack_;
+        }
+        void move(string command, Board &board){
+
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
+            int noOfObjects = 13; // number of objects in the objects array
+            int objNo = rand() % noOfObjects;
+            board.setObject(x_, y_, objects[objNo]);
+
+            if (command == "up"){
+                cout << y_;
+            }
+
+            board.setObject(x_, y_, 'A');
+        }
+
+
+        
 };
 
 class Zombie{
     private:
-        int x_,y_;
+        int x_,y_, life_, attack_, range_ ;
         char id_;
     public:
+        Zombie(){
+            life_ = (rand()%5+1)*50;
+            attack_ = (rand()%6+1)*5;
+            range_ = (rand()%10+1);
+        }
         void spawn(Board &board){
             while(1){
                 x_ = rand() % board.getDimX() + 1;
@@ -183,36 +215,128 @@ class Zombie{
         void setId(char id){
             id_ = id;
         }
+
+        int getX(){
+            return x_;
+        }
+        int getY(){
+            return y_;
+        }
+        int getLife(){
+            return life_;
+        }
+        int getAttack(){
+            return attack_;
+        }
+        int getRange(){
+            return range_;
+        }
+        void setLife(int life){
+            life_ = life;
+        }
+        void setAttack(int attack){
+            attack_ = attack;
+        }
+        void setRange(int range){
+            range_ = range;
+        }
+        void randomizeAttributes(){
+            life_ = ((rand()%5)+1)*50;
+            attack_ = ((rand()%6)+1)*5;
+            range_ = (rand()%5)+1;
+        }
+        
+
+        void move(Board &board){
+            char possibleHeading[] = {'^', '>', '<', 'v'};
+            char heading = possibleHeading[rand() % 4];
+            cout << heading << " ";
+
+            char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'R', 'P', 'H', ' '};
+            int noOfObjects = 10; // number of objects in the objects array
+            int objNo = rand() % noOfObjects;
+            board.setObject(x_, y_, objects[objNo]);
+
+            switch(heading){
+                case '^':
+                    y_ += 1;
+                    cout << "Moving up" << endl;
+                    break;
+                case '>':
+                    x_ += 1;
+                    cout << "Moving right" << endl;
+                    break;
+                case '<':
+                    x_ -= 1;
+                    cout << "Moving left" << endl;
+                    break;
+                case 'v':
+                    y_ -= 1;
+                    cout << "Moving down" << endl;
+                    break;
+
+            }
+            board.setObject(x_, y_, id_);
+        }
 };
 
-int main()
-{
+void command(Player &alien, Board &board){
+    command:
+    string command;
+    cout << "\nEnter Command => ";
+    cin >> command;
+    
+    if (command == "help"){
+        cout << "\n\nCommands\n";
+        cout << "1. up      - Move up.\n";
+        cout << "2. down    - Move down.\n";
+        cout << "3. left    - Move left.\n";
+        cout << "4. right   - Move right.\n";
+        cout << "5. arrow   - Change arrows direction.\n";
+        cout << "6. save    - Save the game.\n";
+        cout << "7. load    - Load up a game.\n";
+        cout << "8. quit    - Quit the game.\n";
+        cout << "9. help    - Display available commands.\n";
+        pf::Pause();
+        pf::ClearScreen();
+        board.display();
+        goto command;
+    }else if (command == "up" || command == "down" || command == "left" || command == "right" ){
+        alien.move(command, board);
+    }
+}
+
+vector<Zombie> zom; // create zombies
+Zombie s;
+Board board; // create board
+Player alien(board); // create player
+int rows,cols,zombies;
+
+void init(){
     srand(time(NULL));
-    ClearScreen();
+    pf::ClearScreen();
     cout << "Default Game Settings" << endl;
     cout << "-----------------------" << endl;
     cout << "Board Rows    : 5" << endl;
     cout << "Board Columns : 9" << endl;
     cout << "Zombie Count  : 1" << endl << endl;
-    int rows,cols,zombies;
     rows = 5;
     cols = 9;
     zombies = 1;
+
     while(true){
         cout << "Do you wish to change game settings? (y/n)? => ";
         char option;
         cin >> option;
 
         if (option == 'y'){
-
-            change:
             
-            cout << "\n\n";
+            change:
+            pf::ClearScreen();
 
             while(1){
                 cout << "Board Rows    : ";
                 cin >> rows;
-                cout << endl;
                 if (rows % 2 == 0){
                     cout << "Use odd number only!!!\n";
                 }
@@ -224,7 +348,6 @@ int main()
             while(1){
                 cout << "Board Columns : ";
                 cin >> cols;
-                cout << endl;
                 if (cols % 2 == 0){
                     cout << "Use odd number only!!!\n";
                 }
@@ -236,7 +359,6 @@ int main()
             while(1){
                 cout << "Zombie Count  : ";
                 cin >> zombies;
-                cout << endl; 
                 if (cols % 2 == 0){
                     cout << "Use odd number only!!!\n";
                 }
@@ -244,7 +366,7 @@ int main()
                     break;
                 }
             }
-            
+            pf::ClearScreen();
             cout << "Game Settings" << endl;
             cout << "-----------------------" << endl;
             cout << "Board Rows    : " << rows << endl;
@@ -266,27 +388,66 @@ int main()
             break;
         }
     }
+    pf::ClearScreen();
 
-    Board board;
-    board.setDimX(cols);
+    board.setDimX(cols); // set board cols and rows 
     board.setDimY(rows);
-
-    Player alien(board);
-    board.display();
-
-	vector<Zombie> zom;
-    Zombie s;
-
+    alien.reset(board);
     for (int i = 0; i<zombies; i++){
         char id = '0'+i+1;
         s.setId(id);
+        s.randomizeAttributes();
         zom.push_back(s);
     }
 
+    // spawn zombies
 	for (int i = 0; i<zombies; i++){
         zom[i].spawn(board);
     }
-    
-    
-	board.display();
+}
+
+int main()
+{
+    init();
+	
+    int turn = 0;
+
+    while(true){
+        pf::ClearScreen();
+        board.display(); //board display
+        if (turn >= zombies+1){
+            turn = 0;
+        }
+        string arrow = "->  ";
+        string empty = "    ";
+        if (turn == 0){
+            cout << arrow;
+        }else{
+            cout << empty;
+        }
+        cout << "Alien   : Life " << alien.getLife() << ", Attack " << alien.getAttack() << endl;
+        for (int i = 0; i<zombies; i++){
+            if (turn == i+1){
+                cout << arrow;
+            }else{
+                cout << empty;
+            }
+            cout << "Zombie " << zom[i].getId() << ": Life " << zom[i].getLife() << ", Attack " << zom[i].getAttack() << ", Range " << zom[i].getRange() << endl;
+        }
+
+        command(alien, board);
+
+        /*
+        char move;
+        cout << "\nEnter command => ";
+        cin >> move;
+        cout << endl;
+        alien.move(move, board);
+        turn += 1;
+        cout << endl;
+        pf::Pause();
+        pf::ClearScreen();
+        board.display();
+        */
+    }
 }
