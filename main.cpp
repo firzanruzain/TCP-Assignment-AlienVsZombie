@@ -22,6 +22,7 @@ using namespace std;
 // declare objects
 char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', '^', 'v', '<', 'R', 'P', 'H', '>'};
 int noOfObjects = 13; // number of objects in the objects array
+
 // list classes
 class Board{
     private:
@@ -287,7 +288,19 @@ class Player{
             attack_ = 0;
         }
         void attacked(int damage){
-            life_ = damage;
+            life_ -= damage;
+            cout << "\nAlien gets damaged by " << damage << ".\n" <<endl;
+            pf::Pause();
+            if (life_ <= 0){
+                life_ = 0;
+            }
+        }
+        bool alive(){
+            return (life_ != 0);
+        }
+        void reset(){
+            life_ = 100;
+            attack_ = 0;
         }
 };
 class Zombie{
@@ -349,7 +362,7 @@ class Zombie{
         void randomizeAttributes(){
             life_ = ((rand()%5)+1)*50;
             attack_ = ((rand()%6)+1)*5;
-            range_ = (rand()%5)+1;
+            range_ = (rand()%5)+2;
         }
         void move(Board &board){
             char possibleHeading[] = {'^', '>', '<', 'v'};
@@ -390,7 +403,6 @@ class Zombie{
                 moves = "cannot move.";
             }
             cout << "\nZombie " << id_ << " " << moves << endl;
-            pf::Pause();
             board.setObject(x_, y_, id_);
         }
         void display(){
@@ -399,8 +411,11 @@ class Zombie{
         void attacked(int damage){
             life_ -= damage;
             cout << "\nZombie " << id_ << " gets damaged by " << damage << ".\n" <<endl;
+            if (life_ < 0){
+                life_ = 0;
+            }
             if (!alive()){
-                cout << "Zombie " << id_ << " is dead.";
+                cout << "Zombie " << id_ << " is dead\n.";
             }
         }
         bool alive(){
@@ -422,6 +437,7 @@ int turn = 0;
 bool playing = true;
 
 // list of standalone functions
+void playGame(); // declare playgame
 void init(){
     srand(time(NULL));
     pf::ClearScreen();
@@ -605,7 +621,7 @@ void loadGame(){
     string filename;
     ifstream readFile;
     while(true){
-        cout << "Enter file name to load => ";
+        cout << "\nEnter file name to load => ";
         cin >> filename;
         filename = filename + ".txt";
         cout << "File name = " << filename << endl;
@@ -741,17 +757,39 @@ void quit(){
     pf::ClearScreen();
     playing = false;
 }
+void restart(){
+    string option;
+    while(true){
+        cout << "\nDo you want to restart the game? (y/n/cancel) => ";
+        cin >> option;
+        if (option == "y"){
+            alien.reset();
+            zom.clear();
+            init();
+            playGame();
+            break;
+        }else if (option == "n"){
+            quit();
+            break;
+        }else if (option == "cancel"){
+            break;
+        }
+    }
+}
+double getDistance(double x1, double x2){
+    return abs(x1 - x2);
+}
 void pod(int x, int y){
     double closestDistance = 100;
     char attackZombie;
     for (int i=0; i<zombies; i++){
         double distance;
-        double dx = abs(x - zom[i].getX());
-        double dy = abs(y - zom[i].getY());
+        double dx = getDistance(x,zom[i].getX());
+        double dy = getDistance(y,zom[i].getY());
 
-        if (x == 0){
+        if (dx == 0){
             distance = dy;
-        }else if (y ==0){
+        }else if (dy ==0){
             distance = dx;
         }else{
             distance = sqrt(pow(dx,2) + pow(dy,2));
@@ -763,18 +801,108 @@ void pod(int x, int y){
     }
     zom[attackZombie].attacked(10);
 }
-void attack(string attacker, string victim){
-    if (attacker == "A"){
-        zom[stoi(victim)-1].attacked(alien.getAttack());
-    }else{
-        alien.attacked(zom[stoi(attacker)-1].getAttack());
+void alienAttack(string attacker, string victim){
+    zom[stoi(victim)-1].attacked(alien.getAttack());
+}
+void zombieAttack(int id){
+    cout << "\nZombie " << id+1 << " tries to attack alien.\n" <<endl;
+    refreshScreen();
+    int zomid = id;
+    int dx = getDistance(alien.getX(), zom[zomid].getX());
+    int dy = getDistance(alien.getY(), zom[zomid].getY());
+    int distance = 100;
+    if (dx == 0){
+        distance = dy;
+    }else if(dy == 0){
+        distance = dx;
     }
+    if (distance <= zom[zomid].getRange()){
+        alien.attacked(zom[zomid].getAttack());
+    }else{
+        cout << "\nAlien is out of zombie's range." << endl;
+        pf::Pause();
+    }
+}
+void arrow(){
+    int col, row;
+    char arrow;
+    string newDirection;
+    char newArrow;
+    arrow:
+    bool arrowExist = false;
+    while (!arrowExist){
+        cout << "\nEnter col and row of arrow to change direction => ";
+        cin >> col >> row;
+        arrow = board.getObject(col, row);
+        if (arrow == '>' || arrow == 'v' || arrow == '<' || arrow == '^'){
+            cout << "Arrow found on (" << col << "," << row << ")" << endl << endl;
+            arrowExist = true;
+        }
+        else{
+            cout << "Arrow does not found on (" << col << "," << row << ")" << endl << endl;
+        }
+    }
+    while(true){
+        cout << "Enter new direction for the arrow (up, down, left right) => ";
+        cin >> newDirection;
+        if (newDirection == "up"){
+            newArrow = '^';
+            break;
+        }else if (newDirection == "down"){
+            newArrow = 'v';
+            break;
+        }else if (newDirection == "left"){
+            newArrow = '<';
+            break;
+        }else if (newDirection == "right"){
+            newArrow = '>';
+            break;
+        }else{
+            cout << "Enter valid direction only." << endl << endl;
+        }
+    }
+    cout << "Changing arrow " << arrow << " on (" << col << "," << row << ") to " << newArrow << endl << endl;
+    board.setObject(col,row,newArrow);
+    refreshScreen();
+    while(true){
+        string option;
+        cout << "\nDo you want to change another arrow? (y/n) => ";
+        cin >> option;
+        if (option == "y"){
+            goto arrow;
+            break;
+        }
+        else if (option == "n"){
+            break;
+        }
+    }
+}
+void zombieTurn(){
+    for (int i=0; i<zombies; i++){
+        mainDisp(board, alien);
+        if (zom[i].alive()){ 
+            zom[i].move(board);
+            refreshScreen();
+            zombieAttack(i);
+        }
+        turn++;
+    }
+}
+bool allZombiesDead(){
+    int deadZombies = 0;
+    for (int i = 0; i<zombies; i++){
+        if (!zom[i].alive()){
+            deadZombies++;
+        }
+    }
+    return(deadZombies == zombies);
 }
 void command(Player &alien, Board &board){
     string command;
     cout << "\nEnter Command => ";
     cin >> command;
-    
+    pf::ClearScreen();
+    mainDisp(board, alien);
     if (command == "help"){
         cout << "\nCommands\n";
         cout << "1. up      - Move up.\n";
@@ -785,7 +913,8 @@ void command(Player &alien, Board &board){
         cout << "6. save    - Save the game.\n";
         cout << "7. load    - Load up a game.\n";
         cout << "8. quit    - Quit the game.\n";
-        cout << "9. help    - Display available commands.\n\n";
+        cout << "9. restart - Restart the game.\n";
+        cout << "10. help    - Display available commands.\n\n";
         pf::Pause();
         mainDisp(board, alien);
     }else if (command == "save"){
@@ -808,6 +937,10 @@ void command(Player &alien, Board &board){
                 break;
             }
         }
+    }else if (command == "restart"){
+        restart();
+    }else if (command == "arrow"){
+        arrow();
     }else if (command == "up" || command == "down" || command == "left" || command == "right" ){
         int y_ = alien.getY();
         int x_ = alien.getX();
@@ -841,7 +974,7 @@ void command(Player &alien, Board &board){
                 else if (obj == '.'){
                 }
                 else if (obj == 'P'){
-                    cout << "\nAlien finds a Pod.\n\n";
+                    cout << "\nAlien finds a Pod.\n";
                     pod(x_, y_);
                 }
                 else if (obj == 'H'){
@@ -868,7 +1001,7 @@ void command(Player &alien, Board &board){
                     cout << "\nAlien attack zombie " << obj << ".\n\n";
                     pf::Pause();
                     string zombietAttacked(1, obj);
-                    attack("A", zombietAttacked);
+                    alienAttack("A", zombietAttacked);
                     if (direction == "up"){
                         y_--;
                     }else if(direction == "down"){
@@ -925,26 +1058,22 @@ void command(Player &alien, Board &board){
         cout << "\nPlease enter valid commands only\n";
         cout << "Enter help for a list of available commands\n\n";
         pf::Pause();
-    }
-
-    
-}
-void zombieTurn(){
-    for (int i=0; i<zombies; i++){
-        mainDisp(board, alien);
-        if (zom[i].alive()){ 
-            zom[i].move(board);
-        }
-        turn++;
-    }
+    }  
 }
 void playGame(){
     while(playing){
         mainDisp(board, alien);
+        if (allZombiesDead()){
+            cout << "Congratulations! You have killed all zombies." << endl;
+            restart();
+        }
+        if (!alien.alive()){
+            cout << "You are dead.";
+            restart();
+        }
         if(turn == 0){
             command(alien, board);
-        }
-        else if (turn>0){
+        }else if (turn>0){
             zombieTurn();
         }
     }

@@ -8,18 +8,9 @@
 
 ### Completed
 
-List all the features completed.
-
 1. game objects -trail, spaces, arrows, rocks, pod, health
-2. Commands - save, load, help, quit
-3. 
-
-### To Do
-
-List all the features not yet done. Remove this section if there is no incomplete requirements.
-
-1. game controls -arrow
-2. Zombie & Player attacks
+2. Commands - save, load, help, quit, arrow
+3. player, zombie attacks
 
 ## Additional Features
 
