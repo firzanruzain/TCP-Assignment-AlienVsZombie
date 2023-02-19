@@ -12,6 +12,10 @@
 2. Commands - save, load, help, quit, arrow
 3. player, zombie attacks
 
+## To do
+
+1. make zombie dissapear from board when died
+
 ## Additional Features
 
 
