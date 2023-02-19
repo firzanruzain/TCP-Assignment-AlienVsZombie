@@ -408,7 +408,7 @@ class Zombie{
         void display(){
             cout << "Zombie " << id_ << ": Life " << life_ << ", Attack " << attack_ << ", Range " << range_ << endl;
         }
-        void attacked(int damage){
+        void attacked(int damage, Board &board){
             life_ -= damage;
             cout << "\nZombie " << id_ << " gets damaged by " << damage << ".\n" <<endl;
             if (life_ < 0){
@@ -416,6 +416,7 @@ class Zombie{
             }
             if (!alive()){
                 cout << "Zombie " << id_ << " is dead\n.";
+                board.setObject(x_, y_, ' ');
             }
         }
         bool alive(){
@@ -799,10 +800,10 @@ void pod(int x, int y){
             attackZombie = i;
         }
     }
-    zom[attackZombie].attacked(10);
+    zom[attackZombie].attacked(10, board);
 }
 void alienAttack(string attacker, string victim){
-    zom[stoi(victim)-1].attacked(alien.getAttack());
+    zom[stoi(victim)-1].attacked(alien.getAttack(), board);
 }
 void zombieAttack(int id){
     cout << "\nZombie " << id+1 << " tries to attack alien.\n" <<endl;
